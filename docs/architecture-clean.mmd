@@ -1,0 +1,52 @@
+```mermaid
+graph TD
+    %% Main Components
+    UI[User_Interface]
+    State[State_Management]
+    Core[Core_Logic]
+    Utils[Utilities]
+    
+    %% UI Components
+    Nav[Navigation]
+    Canvas[Canvas]
+    Node[Node]
+    
+    %% State Components
+    AppState[App_State]
+    DocState[Document]
+    UIState[UI_State]
+    
+    %% Core Components
+    Parser[Parser]
+    Validator[Validator]
+    FileIO[File_IO]
+    
+    %% Connections
+    UI --> State
+    State --> UI
+    State --> Core
+    Core --> State
+    Utils --> UI
+    Utils --> Core
+    
+    Nav --> FileIO
+    Nav --> Node
+    Canvas --> Node
+    Node --> Canvas
+    
+    AppState --> DocState
+    AppState --> UIState
+    
+    Parser --> DocState
+    Validator --> DocState
+    FileIO --> DocState
+    
+    %% Styling
+    classDef ui fill:#e1f5fe,stroke:#01579b
+    classDef state fill:#e8f5e9,stroke:#2e7d32
+    classDef core fill:#f3e5f5,stroke:#4a148c
+    
+    class UI,Nav,Canvas,Node ui
+    class AppState,DocState,UIState state
+    class Core,Parser,Validator,FileIO core
+```

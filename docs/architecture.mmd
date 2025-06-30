@@ -1,0 +1,233 @@
+```mermaid
+graph TD
+    %% Main Application Components
+    subgraph "JSONIC Editor Architecture"
+        UI[User Interface]
+        State[State Management]
+        Core[Core Logic]
+        Utils[Utilities]
+        
+        %% UI Components
+        subgraph "UI Components"
+            Nav[Navigation Bar]
+            Canvas[Editor Canvas]
+            Node[Node Component]
+            ContextMenu[Context Menu]
+            Modal[Modal Windows]
+            Preferences[Preferences Panel]
+        end
+        
+        %% State Management
+        subgraph "State Management"
+            AppState[Application State]
+            Document[Document State]
+            UIState[UI State]
+            Prefs[User Preferences]
+        end
+        
+        %% Core Logic
+        subgraph "Core Logic"
+            Parser[Parser/Serializer]
+            Validator[Schema Validator]
+            History[Undo/Redo Manager]
+            FileIO[File I/O Handler]
+        end
+        
+        %% Utilities
+        subgraph "Utilities"
+            Shortcuts[Keyboard Shortcuts]
+            Theme[Theme Manager]
+            Logger[Logging]
+            Error[Error Handler]
+        end
+        
+        %% Data Flow
+        UI -->|User Interactions| State
+        State -->|State Updates| UI
+        State -->|Data Operations| Core
+        Core -->|Processed Data| State
+        Utils -->|Services| UI
+        Utils -->|Services| Core
+        
+        %% Detailed Connections
+        Nav -->|File_Operations| FileIO
+        Nav -->|Open_Preferences| Preferences
+        Canvas -->|Renders| Node
+        Node -->|Triggers| ContextMenu
+        ContextMenu -->|Node_Actions| Node
+        Modal -->|Shows| Preferences
+        
+        AppState -->|Contains| Document
+        AppState -->|Contains| UIState
+    
+    %% UI Components
+    Nav[Navigation]
+    Canvas[Canvas]
+    Node[Node]
+    
+    %% State Components
+    AppState[App_State]
+    DocState[Document]
+    UIState[UI_State]
+    
+    %% Core Components
+    Parser[Parser]
+    Validator[Validator]
+    FileIO[File_IO]
+    
+    %% Connections
+    UI --> State
+    State --> UI
+    State --> Core
+    Core --> State
+    Utils --> UI
+    Utils --> Core
+    
+    Nav --> FileIO
+    Nav --> Node
+    Canvas --> Node
+    Node --> Canvas
+    
+    AppState --> DocState
+    AppState --> UIState
+    
+    Parser --> DocState
+    Validator --> DocState
+    FileIO --> DocState
+    
+    %% Styling
+    classDef ui fill:#e1f5fe,stroke:#01579b
+    classDef state fill:#e8f5e9,stroke:#2e7d32
+    classDef core fill:#f3e5f5,stroke:#4a148c
+    
+    class UI,Nav,Canvas,Node ui
+    class AppState,DocState,UIState state
+    class Core,Parser,Validator,FileIO core
+    class Parser_Serializer,Schema_Validator,Undo_Redo_Manager,File_IO_Handler logic;
+    class Keyboard_Shortcuts,Theme_Manager,Logging,Error_Handler util;
+    class Browser_File_System,Local_Storage external;
+    class BrowserFS,LocalStorage external;
+
+    %% Feature Implementation Notes
+    %% 1. Node Management
+    Node -->|Supports| NodeActions[Add/Edit/Delete Nodes]
+    Node -->|Handles| KeyboardNav[Keyboard Navigation]
+    Node -->|Maintains| NodeState[Node State]
+    
+    %% 2. Keyboard Navigation
+    KeyboardNav -->|Implements| "Tab: Create Child"
+    KeyboardNav -->|Implements| "Shift+Tab: Return to Parent"
+    KeyboardNav -->|Implements| "Ctrl+Arrow: Navigate Siblings"
+    
+    %% 3. File Operations
+    FileIO -->|Handles| OpenFile[Open JSON Files]
+    FileIO -->|Handles| SaveFile[Save as JSON]
+    FileIO -->|Handles| Export[Export Options]
+    
+    %% 4. Preferences
+    Preferences -->|Manages| ThemeSettings[Theme Settings]
+    Preferences -->|Manages| EditorBehavior[Editor Behavior]
+    Preferences -->|Manages| KeyboardShortcuts[Custom Shortcuts]
+    
+    %% 5. Error Handling
+    Error -->|Catches| ValidationErrors[Validation Errors]
+    Error -->|Catches| ParserErrors[Parsing Errors]
+    Error -->|Provides| UserFriendlyMessages[User-friendly Messages]
+    
+    %% 6. State Management
+    Document -->|Tracks| JSONStructure[JSON Structure]
+    Document -->|Maintains| SelectionState[Selection State]
+    UIState -->|Manages| ViewSettings[View Settings]
+    UIState -->|Tracks| ActiveNodes[Active Node]
+    
+    %% 7. Theme System
+    Theme -->|Supports| LightTheme[Light Theme]
+    Theme -->|Supports| DarkTheme[Dark Theme]
+    Theme -->|Allows| CustomThemes[Custom Themes]
+    
+    %% 8. Undo/Redo
+    History -->|Tracks| Actions[User Actions]
+    History -->|Supports| UndoRedo[Undo/Redo Functionality]
+    
+    %% 9. Context Menu
+    ContextMenu -->|Provides| NodeActions[Node Actions]
+    ContextMenu -->|Contextual| DynamicOptions[Dynamic Options]
+    
+    %% 10. Modal System
+    Modal -->|Shows| FileDialogs[File Dialogs]
+    Modal -->|Displays| ErrorMessages[Error Messages]
+    Modal -->|Presents| ConfirmationDialogs[Confirmation Dialogs]
+```
+
+# JSONIC Editor Architecture Documentation
+
+## Overview
+The JSONIC Editor is a web-based application that provides a visual, concept-map-like interface for editing JSON files. This document outlines the high-level architecture of the application.
+
+## Core Components
+
+### 1. User Interface (UI) Layer
+- **Navigation Bar**: Provides access to file operations and preferences
+- **Editor Canvas**: Main workspace where the JSON structure is visualized
+- **Node Component**: Visual representation of JSON nodes (objects, arrays, values)
+- **Context Menu**: Right-click menu for node-specific actions
+- **Modal Windows**: For dialogs, preferences, and other popups
+
+### 2. State Management
+- **Application State**: Global application state
+- **Document State**: Current JSON document structure and content
+- **UI State**: UI-related state (active node, expanded/collapsed nodes, etc.)
+- **User Preferences**: Persisted user settings
+
+### 3. Core Logic
+- **Parser/Serializer**: Converts between JSON and internal representation
+- **Schema Validator**: Validates JSON structure and content
+- **Undo/Redo Manager**: Tracks changes for undo/redo functionality
+- **File I/O Handler**: Manages file operations
+
+### 4. Utilities
+- **Keyboard Shortcuts**: Manages keyboard navigation and shortcuts
+- **Theme Manager**: Handles theming and styling
+- **Logging**: Centralized logging system
+- **Error Handler**: Centralized error handling and reporting
+
+## Data Flow
+1. User interactions are captured by UI components
+2. Actions are dispatched to the state management layer
+3. State updates trigger UI re-renders
+4. Core logic processes data operations
+5. Utilities provide supporting functionality across all layers
+
+## Key Features Implementation
+
+### Node Management
+- Visual representation of JSON nodes as "thought bubbles"
+- Support for different node types (objects, arrays, values)
+- Parent-child relationships for nested structures
+
+### Keyboard Navigation
+- Intuitive navigation using keyboard shortcuts
+- Tab/Shift+Tab for hierarchy navigation
+- Arrow keys for sibling navigation
+
+### File Operations
+- Open/Save JSON files
+- Import/Export functionality
+- Auto-save and recovery options
+
+### Preferences System
+- Theme customization
+- Editor behavior settings
+- Keyboard shortcut customization
+
+## Technical Considerations
+- Built with modern web technologies (React/Vue, TypeScript)
+- Responsive design for different screen sizes
+- Accessibility support
+- Performance optimization for large JSON files
+
+## Future Extensions
+- Collaboration features
+- Version control integration
+- Plugin system for custom node types and behaviors
+- Advanced search and replace functionality
