@@ -1,0 +1,9 @@
+.json-node {
+  padding: 4px;
+  border: 1px solid #ccc;
+  display: inline-block;
+  margin: 2px;
+}
+.json-node.active {
+  border-color: blue;
+}
