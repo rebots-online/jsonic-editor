@@ -18,4 +18,5 @@ Otherwise, using \<CTRL>-\<ARROW> keys navigates between child-siblings and pare
 
 To Save the file, click File > Save (CTRL-S) 
 
-Licence info in Help > About
+License info in Help > About
+

@@ -1,0 +1,18 @@
+```mermaid
+graph TD
+    Root((jsonic-editor))
+    Root --> src
+    Root --> docs
+    Root --> index[index.html]
+    Root --> eslint[eslint.config.cjs]
+    Root --> packageJson[package.json]
+    Root --> tsconfig[tsconfig.json]
+    Root --> vite[vite.config.ts]
+    src --> components
+    src --> core
+    src --> hooks
+    src --> state
+    src --> styles
+    src --> types
+    src --> utils
+```
