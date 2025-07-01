@@ -1,12 +1,35 @@
+export enum NodeType {
+  OBJECT = 'object',
+  ARRAY = 'array',
+  STRING = 'string',
+  NUMBER = 'number',
+  BOOLEAN = 'boolean',
+  NULL = 'null'
+}
+
+export interface Position {
+  x: number;
+  y: number;
+}
+
 export interface JsonNode {
   id: string;
-  type: 'object' | 'array' | 'string' | 'number' | 'boolean' | 'null';
+  type: NodeType;
   key?: string;
   value?: any;
   children?: JsonNode[];
   parent?: string;
-  position: { x: number; y: number };
+  position: Position;
   expanded: boolean;
+  path?: string[];
+  isDragging?: boolean;
+  isSelected?: boolean;
+}
+
+export interface NodeDropResult {
+  draggedId: string;
+  targetId: string;
+  position?: 'before' | 'after' | 'inside';
 }
 
 export interface DocumentState {

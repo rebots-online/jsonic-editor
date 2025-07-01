@@ -1,26 +1,22 @@
 import React from 'react';
-import { JsonParser } from './core/parser/json-parser';
-import { NavigationBar } from './components/navigation/navigation-bar';
-import { EditorCanvas } from './components/canvas/editor-canvas';
-import { JsonNode } from './types/core';
+import { DndProvider } from 'react-dnd/dist/core';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import JsonNodeDemo from './components/demos/JsonNodeDemo';
+import './App.css';
 
-export function App() {
-  const parser = new JsonParser();
-  const [nodes, setNodes] = React.useState<JsonNode[]>([]);
-
-  const handleFileLoad = (content: string) => {
-    setNodes(parser.parse(content));
-  };
-
-  const handleFileSave = () => {
-    const data = parser.serialize(nodes);
-    console.log(data);
-  };
-
+const App: React.FC = () => {
   return (
-    <div>
-      <NavigationBar onFileOpen={() => {}} onFileSave={handleFileSave} onPreferencesOpen={() => {}} />
-      <EditorCanvas nodes={nodes} onNodeSelect={() => {}} onNodeUpdate={() => {}} />
+    <div className="app">
+      <DndProvider backend={HTML5Backend}>
+        <header className="app-header">
+          <h1>JSONIC Editor</h1>
+        </header>
+        <main className="app-main">
+          <JsonNodeDemo />
+        </main>
+      </DndProvider>
     </div>
   );
-}
+};
+
+export default App;
