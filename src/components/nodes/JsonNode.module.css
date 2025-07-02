@@ -17,7 +17,7 @@
   cursor: pointer;
   transition: background-color 0.2s, opacity 0.2s;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   min-height: 28px;
   user-select: none;
 }
@@ -86,4 +86,27 @@
   margin-left: 16px;
   border-left: 1px dashed #e0e0e0;
   padding-left: 8px;
+}
+
+.addButton {
+  margin-left: 4px;
+  font-size: 12px;
+  padding: 0 4px;
+}
+
+.addSelect {
+  margin-left: 4px;
+  font-size: 12px;
+}
+
+.nodeContent {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.editField {
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
 }
