@@ -1,0 +1,26 @@
+```mermaid
+graph TD
+    Root((jsonic-editor))
+    Root --> src
+    Root --> docs
+    Root --> packageJson[package.json]
+    Root --> tsconfig[tsconfig.json]
+    Root --> vite[vite.config.ts]
+    src --> components
+    src --> core
+    src --> hooks
+    src --> mocks
+    src --> state
+    src --> styles
+    src --> types
+    src --> utils
+    styles --> themes
+    themes --> glassLight[glassmorphic-light.css]
+    themes --> glassDark[glassmorphic-dark.css]
+    themes --> skeuoLight[skeuomorphic-light.css]
+    themes --> skeuoDark[skeuomorphic-dark.css]
+    themes --> retroLight[retro-light.css]
+    themes --> retroDark[retro-dark.css]
+    themes --> brutalLight[brutalist-light.css]
+    themes --> brutalDark[brutalist-dark.css]
+```

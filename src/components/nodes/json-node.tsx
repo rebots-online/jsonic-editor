@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDrag, useDrop, DropTargetMonitor, DragSourceMonitor } from 'react-dnd';
 import { JsonNode as Node, NodeType, NodeDropResult } from '../../types/core';
 import { getNodeIcon } from '../../utils/node-utils';
@@ -34,6 +34,8 @@ export function JsonNode({
   onToggleExpand,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState<string>('');
   const isExpandable = node.type === NodeType.OBJECT || node.type === NodeType.ARRAY;
   const hasChildren = isExpandable && Array.isArray(node.children) && node.children.length > 0;
 
@@ -82,6 +84,39 @@ export function JsonNode({
     onSelect(node.id);
   };
 
+  const handleDoubleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (node.type !== NodeType.OBJECT && node.type !== NodeType.ARRAY) {
+      setEditValue(String(node.value ?? ''));
+      setIsEditing(true);
+    }
+  };
+
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditValue(e.target.value);
+  };
+
+  const commitEdit = () => {
+    let value: any = editValue;
+    if (node.type === NodeType.NUMBER) value = Number(editValue);
+    if (node.type === NodeType.BOOLEAN) value = editValue === 'true';
+    if (node.type === NodeType.NULL) value = null;
+    onUpdate(node.id, { value });
+    setIsEditing(false);
+  };
+
+  const handleEditKey = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      commitEdit();
+    } else if (e.key === 'Escape') {
+      setIsEditing(false);
+    }
+  };
+
+  const handleEditBlur = () => {
+    commitEdit();
+  };
+
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     onContextMenu(e, node);
@@ -91,7 +126,8 @@ export function JsonNode({
     styles.node,
     isActive ? styles.active : '',
     isDragging ? styles.dragging : '',
-    isOver && canDrop ? styles.dropTarget : ''
+    isOver && canDrop ? styles.dropTarget : '',
+    isEditing ? styles.editing : ''
   ].filter(Boolean).join(' ');
   
   const style = {
@@ -124,13 +160,25 @@ export function JsonNode({
         )}
         <span className={styles.nodeIcon}>{getNodeIcon(node.type)}</span>
         {node.key && <span className={styles.nodeKey}>{node.key}:</span>}
-        <span className={styles.nodeValue}>
-          {node.type === NodeType.OBJECT && !isExpanded && '{...} '}
-          {node.type === NodeType.ARRAY && !isExpanded && '[...] '}
-          {node.type === NodeType.STRING && `"${node.value}"`}
-          {node.type === NodeType.NUMBER && String(node.value)}
-          {node.type === NodeType.BOOLEAN && String(node.value)}
-          {node.type === NodeType.NULL && 'null'}
+        <span className={styles.nodeValue} onDoubleClick={handleDoubleClick}>
+          {isEditing ? (
+            <input
+              autoFocus
+              value={editValue}
+              onChange={handleEditChange}
+              onBlur={handleEditBlur}
+              onKeyDown={handleEditKey}
+            />
+          ) : (
+            <>
+              {node.type === NodeType.OBJECT && !isExpanded && '{...} '}
+              {node.type === NodeType.ARRAY && !isExpanded && '[...] '}
+              {node.type === NodeType.STRING && `"${node.value}"`}
+              {node.type === NodeType.NUMBER && String(node.value)}
+              {node.type === NodeType.BOOLEAN && String(node.value)}
+              {node.type === NodeType.NULL && 'null'}
+            </>
+          )}
         </span>
       </div>
       {hasChildren && isExpanded && (

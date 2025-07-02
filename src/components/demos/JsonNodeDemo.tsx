@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { JsonNode } from '../../types/core';
+import { JsonNode, NodeType } from '../../types/core';
+import { FileHandler } from '../../core/file-io/file-handler';
+import { JsonParser } from '../../core/parser/json-parser';
 import { JsonNode as JsonNodeComponent } from '../nodes/json-node';
 import { testData } from '../../mocks/test-data';
 
@@ -27,6 +29,8 @@ const JsonNodeDemo: React.FC = () => {
   const [nodes, setNodes] = useState<JsonNode>(testData);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({});
+  const fileHandler = new FileHandler();
+  const parser = new JsonParser();
 
   const handleSelect = (nodeId: string) => {
     setSelectedNodeId(nodeId === selectedNodeId ? null : nodeId);
@@ -69,6 +73,28 @@ const JsonNodeDemo: React.FC = () => {
     }));
   };
 
+  const handleOpenFile = async () => {
+    try {
+      const parsed = await fileHandler.openJson();
+      const root: JsonNode = {
+        id: 'root',
+        type: NodeType.OBJECT,
+        key: 'root',
+        position: { x: 0, y: 0 },
+        expanded: true,
+        children: parsed,
+      };
+      setNodes(root);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSaveFile = () => {
+    const json = parser.serialize(nodes.children || []);
+    fileHandler.saveFile(json, 'data.json');
+  };
+
   const isNodeExpanded = (nodeId: string) => {
     return expandedNodes[nodeId] ?? true; // Default to expanded if not set
   };
@@ -76,6 +102,10 @@ const JsonNodeDemo: React.FC = () => {
   return (
     <div style={styles.demoContainer}>
       <h2 style={styles.title}>JSON Node Demo</h2>
+      <div style={{ textAlign: 'center', marginBottom: '10px' }}>
+        <button onClick={handleOpenFile}>Open JSON</button>
+        <button onClick={handleSaveFile} style={{ marginLeft: '8px' }}>Save JSON</button>
+      </div>
       <div style={styles.jsonTree}>
         {nodes.children?.map((node) => (
           <JsonNodeComponent

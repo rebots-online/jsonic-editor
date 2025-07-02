@@ -1,10 +1,24 @@
 import { JsonNode } from '../../types/core';
+import { JsonParser } from '../../core/parser/json-parser';
 
 export class DocumentStore {
   private nodes: JsonNode[] = [];
 
-  loadDocument(jsonData: any): void {
-    this.nodes = jsonData as JsonNode[];
+  loadDocument(jsonData: string | JsonNode[] | object): void {
+    if (typeof jsonData === 'string') {
+      const parser = new JsonParser();
+      this.nodes = parser.parse(jsonData);
+    } else if (Array.isArray(jsonData)) {
+      this.nodes = jsonData as JsonNode[];
+    } else {
+      const parser = new JsonParser();
+      this.nodes = parser.parse(JSON.stringify(jsonData));
+    }
+  }
+
+  saveDocument(): string {
+    const parser = new JsonParser();
+    return parser.serialize(this.nodes);
   }
 
   updateNode(nodeId: string, updates: Partial<JsonNode>): void {
@@ -23,6 +37,13 @@ export class DocumentStore {
 
   deleteNode(nodeId: string): void {
     this.nodes = this.nodes.filter(n => n.id !== nodeId);
+    this.nodes.forEach(n => this.removeFromChildren(n, nodeId));
+  }
+
+  private removeFromChildren(parent: JsonNode, id: string): void {
+    if (!parent.children) return;
+    parent.children = parent.children.filter(c => c.id !== id);
+    parent.children.forEach(c => this.removeFromChildren(c, id));
   }
 
   getNode(nodeId: string): JsonNode | null {

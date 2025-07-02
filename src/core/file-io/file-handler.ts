@@ -1,4 +1,5 @@
 import { JsonNode } from '../../types/core';
+import { JsonParser } from '../parser/json-parser';
 
 export class FileHandler {
   async openFile(): Promise<string> {
@@ -18,6 +19,12 @@ export class FileHandler {
     });
   }
 
+  async openJson(): Promise<JsonNode[]> {
+    const text = await this.openFile();
+    const parser = new JsonParser();
+    return parser.parse(text);
+  }
+
   saveFile(content: string, filename: string): void {
     const blob = new Blob([content], { type: 'application/json' });
     const link = document.createElement('a');
@@ -27,8 +34,14 @@ export class FileHandler {
     URL.revokeObjectURL(link.href);
   }
 
+  saveJson(nodes: JsonNode[], filename: string): void {
+    const parser = new JsonParser();
+    const content = parser.serialize(nodes);
+    this.saveFile(content, filename);
+  }
+
   exportFile(nodes: JsonNode[], format: string): string {
-    // simple JSON export for now
-    return JSON.stringify(nodes, null, 2);
+    const parser = new JsonParser();
+    return parser.serialize(nodes);
   }
 }

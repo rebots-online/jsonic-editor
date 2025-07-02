@@ -35,6 +35,10 @@
   opacity: 0.5;
 }
 
+.node.editing {
+  background-color: #fff3e0;
+}
+
 .node.drop-target {
   background-color: #e3f2fd;
 }
