@@ -1,17 +1,17 @@
 import { JsonNode } from '../../types/core';
-import { JsonParser } from '../parser/json-parser';
+import { GenericParser, SupportedFormat } from '../parser/generic-parser';
 
 export class FileHandler {
-  async openFile(): Promise<string> {
+  async openFile(): Promise<{ name: string; content: string }> {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = 'application/json';
-    return new Promise<string>((resolve, reject) => {
+    input.accept = '.json,.yaml,.yml,.toml,.ini';
+    return new Promise<{ name: string; content: string }>((resolve, reject) => {
       input.onchange = () => {
         const file = input.files?.[0];
         if (!file) return reject('No file');
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result as string);
+        reader.onload = () => resolve({ name: file.name, content: reader.result as string });
         reader.onerror = () => reject(reader.error);
         reader.readAsText(file);
       };
@@ -19,14 +19,19 @@ export class FileHandler {
     });
   }
 
-  async openJson(): Promise<JsonNode[]> {
-    const text = await this.openFile();
-    const parser = new JsonParser();
-    return parser.parse(text);
+  async openDocument(): Promise<{ format: SupportedFormat; nodes: JsonNode[] }> {
+    const { name, content } = await this.openFile();
+    const parser = new GenericParser();
+    const extMatch = /\.([^\.]+)$/.exec(name);
+    let ext = extMatch ? extMatch[1].toLowerCase() : 'json';
+    const format: SupportedFormat = ext === 'yaml' || ext === 'yml'
+      ? 'yaml'
+      : (ext as SupportedFormat);
+    return { format, nodes: parser.parse(content, format) };
   }
 
-  saveFile(content: string, filename: string): void {
-    const blob = new Blob([content], { type: 'application/json' });
+  saveFile(content: string, filename: string, type = 'application/json'): void {
+    const blob = new Blob([content], { type });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = filename;
@@ -34,14 +39,15 @@ export class FileHandler {
     URL.revokeObjectURL(link.href);
   }
 
-  saveJson(nodes: JsonNode[], filename: string): void {
-    const parser = new JsonParser();
-    const content = parser.serialize(nodes);
-    this.saveFile(content, filename);
+  saveDocument(nodes: JsonNode[], format: SupportedFormat, filename: string): void {
+    const parser = new GenericParser();
+    const content = parser.serialize(nodes, format);
+    const mime = format === 'json' ? 'application/json' : 'text/plain';
+    this.saveFile(content, filename, mime);
   }
 
-  exportFile(nodes: JsonNode[], format: string): string {
-    const parser = new JsonParser();
-    return parser.serialize(nodes);
+  exportFile(nodes: JsonNode[], format: SupportedFormat): string {
+    const parser = new GenericParser();
+    return parser.serialize(nodes, format);
   }
 }

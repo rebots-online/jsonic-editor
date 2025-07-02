@@ -88,6 +88,21 @@
   padding-left: 8px;
 }
 
+.insertRow {
+  display: flex;
+  align-items: center;
+}
+
+.dropZone {
+  flex-grow: 1;
+  height: 4px;
+  margin: 2px 0;
+}
+
+.dropZoneActive {
+  background-color: #90caf9;
+}
+
 .addButton {
   margin-left: 4px;
   font-size: 12px;
