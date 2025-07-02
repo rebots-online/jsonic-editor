@@ -26,13 +26,33 @@ export class DocumentStore {
     if (node) Object.assign(node, updates);
   }
 
-  addNode(parentId: string, node: JsonNode): void {
+  addNode(parentId: string, node: JsonNode, index?: number): void {
     const parent = this.getNode(parentId);
     if (parent) {
       parent.children = parent.children || [];
-      parent.children.push(node);
+      if (index === undefined || index >= parent.children.length) {
+        parent.children.push(node);
+      } else {
+        parent.children.splice(index, 0, node);
+      }
       node.parent = parentId;
     }
+  }
+
+  moveNode(nodeId: string, newParentId: string, index: number): void {
+    const node = this.getNode(nodeId);
+    const oldParent = node ? this.getParent(nodeId) : null;
+    const newParent = this.getNode(newParentId);
+    if (!node || !newParent) return;
+    if (oldParent && oldParent.children) {
+      oldParent.children = oldParent.children.filter(c => c.id !== nodeId);
+    } else {
+      this.nodes = this.nodes.filter(n => n.id !== nodeId);
+    }
+    newParent.children = newParent.children || [];
+    if (index > newParent.children.length) index = newParent.children.length;
+    newParent.children.splice(index, 0, node);
+    node.parent = newParentId;
   }
 
   deleteNode(nodeId: string): void {
