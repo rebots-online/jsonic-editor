@@ -143,6 +143,18 @@ graph TD
     %% 7. Theme System
     Theme -->|Supports| LightTheme[Light Theme]
     Theme -->|Supports| DarkTheme[Dark Theme]
+    Theme --> Glassmorphic
+    Theme --> Skeuomorphic
+    Theme --> Retro
+    Theme --> Brutalist
+    Glassmorphic --> GLight[Glassmorphic Light]
+    Glassmorphic --> GDark[Glassmorphic Dark]
+    Skeuomorphic --> SLight[Skeuomorphic Light]
+    Skeuomorphic --> SDark[Skeuomorphic Dark]
+    Retro --> RLight[Retro Light]
+    Retro --> RDark[Retro Dark]
+    Brutalist --> BLight[Brutalist Light]
+    Brutalist --> BDark[Brutalist Dark]
     Theme -->|Allows| CustomThemes[Custom Themes]
     
     %% 8. Undo/Redo
