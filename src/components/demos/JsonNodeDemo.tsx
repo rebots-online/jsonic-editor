@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { JsonNode, NodeType } from '../../types/core';
 import { FileHandler } from '../../core/file-io/file-handler';
 import { JsonParser } from '../../core/parser/json-parser';
@@ -27,13 +28,40 @@ const styles = {
 
 const JsonNodeDemo: React.FC = () => {
   const [nodes, setNodes] = useState<JsonNode>(testData);
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  const [selectedNodeIds, setSelectedNodeIds] = useState<string[]>([]);
   const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({});
   const fileHandler = new FileHandler();
   const parser = new JsonParser();
+  const createNode = (type: NodeType): JsonNode => {
+    return {
+      id: uuidv4(),
+      type,
+      key: type === NodeType.OBJECT || type === NodeType.ARRAY ? '' : 'newKey',
+      value:
+        type === NodeType.STRING
+          ? ''
+          : type === NodeType.NUMBER
+          ? 0
+          : type === NodeType.BOOLEAN
+          ? false
+          : type === NodeType.NULL
+          ? null
+          : undefined,
+      children: type === NodeType.OBJECT || type === NodeType.ARRAY ? [] : undefined,
+      position: { x: 0, y: 0 },
+      expanded: true,
+    };
+  };
 
-  const handleSelect = (nodeId: string) => {
-    setSelectedNodeId(nodeId === selectedNodeId ? null : nodeId);
+  const handleSelect = (nodeId: string, e: React.MouseEvent) => {
+    setSelectedNodeIds(prev => {
+      if (e.shiftKey || e.ctrlKey || e.metaKey) {
+        return prev.includes(nodeId)
+          ? prev.filter(id => id !== nodeId)
+          : [...prev, nodeId];
+      }
+      return [nodeId];
+    });
   };
 
   const handleUpdate = (nodeId: string, updates: Partial<JsonNode>) => {
@@ -71,6 +99,22 @@ const JsonNodeDemo: React.FC = () => {
       ...prev,
       [nodeId]: !prev[nodeId],
     }));
+  };
+
+  const handleAddChild = (parentId: string, type: NodeType) => {
+    const newNode = createNode(type);
+    const addTo = (node: JsonNode): JsonNode => {
+      if (node.id === parentId) {
+        const children = node.children ? [...node.children, newNode] : [newNode];
+        return { ...node, children };
+      }
+      return {
+        ...node,
+        children: node.children?.map(addTo),
+      };
+    };
+    setNodes(prev => ({ ...prev, children: prev.children?.map(addTo) || [] }));
+    setExpandedNodes(prev => ({ ...prev, [parentId]: true }));
   };
 
   const handleOpenFile = async () => {
@@ -111,12 +155,13 @@ const JsonNodeDemo: React.FC = () => {
           <JsonNodeComponent
             key={node.id}
             node={node}
-            isActive={selectedNodeId === node.id}
+            selectedIds={selectedNodeIds}
             onSelect={handleSelect}
             onUpdate={handleUpdate}
             onContextMenu={handleContextMenu}
             onDrop={handleDrop}
             onToggleExpand={handleToggleExpand}
+            onAddChild={handleAddChild}
             isExpanded={isNodeExpanded(node.id)}
             level={0}
           />

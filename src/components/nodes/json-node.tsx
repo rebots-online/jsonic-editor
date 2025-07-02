@@ -12,19 +12,20 @@ interface DragItem {
 
 interface Props {
   node: Node;
-  isActive: boolean;
+  selectedIds: string[];
   isExpanded?: boolean;
   level?: number;
-  onSelect: (id: string) => void;
+  onSelect: (id: string, e?: React.MouseEvent | React.KeyboardEvent) => void;
   onUpdate: (id: string, updates: Partial<Node>) => void;
   onContextMenu: (e: React.MouseEvent, node: Node) => void;
   onDrop: (draggedId: string, targetId: string) => void;
   onToggleExpand?: (id: string) => void;
+  onAddChild?: (parentId: string, type: NodeType) => void;
 }
 
 export function JsonNode({
   node,
-  isActive,
+  selectedIds,
   isExpanded = true,
   level = 0,
   onSelect,
@@ -32,10 +33,14 @@ export function JsonNode({
   onContextMenu,
   onDrop,
   onToggleExpand,
+  onAddChild,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState<string>('');
+  const [useTextarea, setUseTextarea] = useState(false);
+  const [addingChild, setAddingChild] = useState(false);
+  const isActive = selectedIds.includes(node.id);
   const isExpandable = node.type === NodeType.OBJECT || node.type === NodeType.ARRAY;
   const hasChildren = isExpandable && Array.isArray(node.children) && node.children.length > 0;
 
@@ -66,7 +71,7 @@ export function JsonNode({
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      onSelect(node.id);
+      onSelect(node.id, e);
     } else if (e.key === 'ArrowRight' && isExpandable && !isExpanded) {
       onToggleExpand?.(node.id);
     } else if (e.key === 'ArrowLeft' && isExpandable && isExpanded) {
@@ -81,19 +86,29 @@ export function JsonNode({
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onSelect(node.id);
+    onSelect(node.id, e);
   };
 
-  const handleDoubleClick = (e: React.MouseEvent) => {
+  const handleValueClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (node.type !== NodeType.OBJECT && node.type !== NodeType.ARRAY) {
-      setEditValue(String(node.value ?? ''));
+      const current = String(node.value ?? '');
+      setEditValue(current);
+      if (node.type === NodeType.STRING && (current.length > 30 || current.includes('\n'))) {
+        setUseTextarea(true);
+      } else {
+        setUseTextarea(false);
+      }
       setIsEditing(true);
     }
   };
 
-  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditValue(e.target.value);
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (node.type === NodeType.BOOLEAN && e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
+      setEditValue(String(e.target.checked));
+    } else {
+      setEditValue(e.target.value);
+    }
   };
 
   const commitEdit = () => {
@@ -121,6 +136,21 @@ export function JsonNode({
     e.preventDefault();
     onContextMenu(e, node);
   };
+
+  const handleAddClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setAddingChild(true);
+  };
+
+  const handleSelectAdd = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value as NodeType;
+    if (value && onAddChild) {
+      onAddChild(node.id, value);
+    }
+    setAddingChild(false);
+  };
+
+  const cancelAdd = () => setAddingChild(false);
 
   const nodeClasses = [
     styles.node,
@@ -160,15 +190,36 @@ export function JsonNode({
         )}
         <span className={styles.nodeIcon}>{getNodeIcon(node.type)}</span>
         {node.key && <span className={styles.nodeKey}>{node.key}:</span>}
-        <span className={styles.nodeValue} onDoubleClick={handleDoubleClick}>
+        <span className={styles.nodeValue} onClick={handleValueClick}>
           {isEditing ? (
-            <input
-              autoFocus
-              value={editValue}
-              onChange={handleEditChange}
-              onBlur={handleEditBlur}
-              onKeyDown={handleEditKey}
-            />
+            node.type === NodeType.BOOLEAN ? (
+              <input
+                type="checkbox"
+                autoFocus
+                checked={editValue === 'true'}
+                onChange={handleEditChange}
+                onBlur={handleEditBlur}
+              />
+            ) : useTextarea ? (
+              <textarea
+                autoFocus
+                value={editValue}
+                onChange={handleEditChange}
+                onBlur={handleEditBlur}
+                onKeyDown={handleEditKey}
+                rows={Math.min(Math.max(editValue.split('\n').length, 3), 10)}
+                className={styles.editField}
+              />
+            ) : (
+              <input
+                autoFocus
+                value={editValue}
+                onChange={handleEditChange}
+                onBlur={handleEditBlur}
+                onKeyDown={handleEditKey}
+                className={styles.editField}
+              />
+            )
           ) : (
             <>
               {node.type === NodeType.OBJECT && !isExpanded && '{...} '}
@@ -180,6 +231,26 @@ export function JsonNode({
             </>
           )}
         </span>
+        {isExpandable && (
+          addingChild ? (
+            <select
+              autoFocus
+              onBlur={cancelAdd}
+              onChange={handleSelectAdd}
+              className={styles.addSelect}
+            >
+              <option value="">add...</option>
+              <option value={NodeType.OBJECT}>object</option>
+              <option value={NodeType.ARRAY}>array</option>
+              <option value={NodeType.STRING}>string</option>
+              <option value={NodeType.NUMBER}>number</option>
+              <option value={NodeType.BOOLEAN}>boolean</option>
+              <option value={NodeType.NULL}>null</option>
+            </select>
+          ) : (
+            <button className={styles.addButton} onClick={handleAddClick}>+</button>
+          )
+        )}
       </div>
       {hasChildren && isExpanded && (
         <div className={styles.nodeChildren} role="group">
@@ -187,13 +258,14 @@ export function JsonNode({
             <JsonNode
               key={child.id}
               node={child}
-              isActive={false}
+              selectedIds={selectedIds}
               level={level + 1}
               onSelect={onSelect}
               onUpdate={onUpdate}
               onContextMenu={onContextMenu}
               onDrop={onDrop}
               onToggleExpand={onToggleExpand}
+              onAddChild={onAddChild}
             />
           ))}
         </div>
