@@ -20,6 +20,7 @@ interface Props {
   onContextMenu: (e: React.MouseEvent, node: Node) => void;
   onDrop: (draggedId: string, targetId: string) => void;
   onToggleExpand?: (id: string) => void;
+  onAddChild?: (parentId: string, type: NodeType) => void;
 }
 
 export function JsonNode({
@@ -32,10 +33,13 @@ export function JsonNode({
   onContextMenu,
   onDrop,
   onToggleExpand,
+  onAddChild,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState<string>('');
+  const [useTextarea, setUseTextarea] = useState(false);
+  const [addingChild, setAddingChild] = useState(false);
   const isExpandable = node.type === NodeType.OBJECT || node.type === NodeType.ARRAY;
   const hasChildren = isExpandable && Array.isArray(node.children) && node.children.length > 0;
 
@@ -87,13 +91,23 @@ export function JsonNode({
   const handleDoubleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (node.type !== NodeType.OBJECT && node.type !== NodeType.ARRAY) {
-      setEditValue(String(node.value ?? ''));
+      const current = String(node.value ?? '');
+      setEditValue(current);
+      if (node.type === NodeType.STRING && (current.length > 30 || current.includes('\n'))) {
+        setUseTextarea(true);
+      } else {
+        setUseTextarea(false);
+      }
       setIsEditing(true);
     }
   };
 
-  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEditValue(e.target.value);
+  const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (node.type === NodeType.BOOLEAN && e.target instanceof HTMLInputElement && e.target.type === 'checkbox') {
+      setEditValue(String(e.target.checked));
+    } else {
+      setEditValue(e.target.value);
+    }
   };
 
   const commitEdit = () => {
@@ -121,6 +135,21 @@ export function JsonNode({
     e.preventDefault();
     onContextMenu(e, node);
   };
+
+  const handleAddClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setAddingChild(true);
+  };
+
+  const handleSelectAdd = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value as NodeType;
+    if (value && onAddChild) {
+      onAddChild(node.id, value);
+    }
+    setAddingChild(false);
+  };
+
+  const cancelAdd = () => setAddingChild(false);
 
   const nodeClasses = [
     styles.node,
@@ -162,13 +191,32 @@ export function JsonNode({
         {node.key && <span className={styles.nodeKey}>{node.key}:</span>}
         <span className={styles.nodeValue} onDoubleClick={handleDoubleClick}>
           {isEditing ? (
-            <input
-              autoFocus
-              value={editValue}
-              onChange={handleEditChange}
-              onBlur={handleEditBlur}
-              onKeyDown={handleEditKey}
-            />
+            node.type === NodeType.BOOLEAN ? (
+              <input
+                type="checkbox"
+                autoFocus
+                checked={editValue === 'true'}
+                onChange={handleEditChange}
+                onBlur={handleEditBlur}
+              />
+            ) : useTextarea ? (
+              <textarea
+                autoFocus
+                value={editValue}
+                onChange={handleEditChange}
+                onBlur={handleEditBlur}
+                onKeyDown={handleEditKey}
+                rows={3}
+              />
+            ) : (
+              <input
+                autoFocus
+                value={editValue}
+                onChange={handleEditChange}
+                onBlur={handleEditBlur}
+                onKeyDown={handleEditKey}
+              />
+            )
           ) : (
             <>
               {node.type === NodeType.OBJECT && !isExpanded && '{...} '}
@@ -180,6 +228,26 @@ export function JsonNode({
             </>
           )}
         </span>
+        {isExpandable && (
+          addingChild ? (
+            <select
+              autoFocus
+              onBlur={cancelAdd}
+              onChange={handleSelectAdd}
+              className={styles.addSelect}
+            >
+              <option value="">add...</option>
+              <option value={NodeType.OBJECT}>object</option>
+              <option value={NodeType.ARRAY}>array</option>
+              <option value={NodeType.STRING}>string</option>
+              <option value={NodeType.NUMBER}>number</option>
+              <option value={NodeType.BOOLEAN}>boolean</option>
+              <option value={NodeType.NULL}>null</option>
+            </select>
+          ) : (
+            <button className={styles.addButton} onClick={handleAddClick}>+</button>
+          )
+        )}
       </div>
       {hasChildren && isExpanded && (
         <div className={styles.nodeChildren} role="group">
@@ -194,6 +262,7 @@ export function JsonNode({
               onContextMenu={onContextMenu}
               onDrop={onDrop}
               onToggleExpand={onToggleExpand}
+              onAddChild={onAddChild}
             />
           ))}
         </div>

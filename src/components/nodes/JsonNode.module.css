@@ -87,3 +87,14 @@
   border-left: 1px dashed #e0e0e0;
   padding-left: 8px;
 }
+
+.addButton {
+  margin-left: 4px;
+  font-size: 12px;
+  padding: 0 4px;
+}
+
+.addSelect {
+  margin-left: 4px;
+  font-size: 12px;
+}
