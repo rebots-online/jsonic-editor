@@ -1,0 +1,23 @@
+```mermaid
+graph TD
+    Root((jsonic-editor))
+    Root --> src
+    Root --> docs
+    Root --> packageJson[package.json]
+    Root --> tsconfig[tsconfig.json]
+    Root --> vite[vite.config.ts]
+    src --> components
+    src --> core
+    src --> hooks
+    src --> mocks
+    src --> state
+    src --> styles
+    src --> types
+    src --> utils
+    core --> parser
+    core --> fileIO[file-io]
+    core --> history
+    core --> validator
+    state --> stores
+    components --> nodes
+```

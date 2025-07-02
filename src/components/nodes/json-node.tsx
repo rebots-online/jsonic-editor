@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useDrag, useDrop, DropTargetMonitor, DragSourceMonitor } from 'react-dnd';
-import { JsonNode as Node, NodeType, NodeDropResult } from '../../types/core';
+import { DropZone } from './drop-zone';
+import { JsonNode as Node, NodeType } from '../../types/core';
 import { getNodeIcon } from '../../utils/node-utils';
 import styles from './JsonNode.module.css';
 
@@ -18,9 +19,9 @@ interface Props {
   onSelect: (id: string, e?: React.MouseEvent | React.KeyboardEvent) => void;
   onUpdate: (id: string, updates: Partial<Node>) => void;
   onContextMenu: (e: React.MouseEvent, node: Node) => void;
-  onDrop: (draggedId: string, targetId: string) => void;
+  onDrop: (draggedId: string, parentId: string, index: number) => void;
   onToggleExpand?: (id: string) => void;
-  onAddChild?: (parentId: string, type: NodeType) => void;
+  onAddChild?: (parentId: string, type: NodeType, index?: number) => void;
 }
 
 export function JsonNode({
@@ -39,12 +40,12 @@ export function JsonNode({
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState<string>('');
   const [useTextarea, setUseTextarea] = useState(false);
-  const [addingChild, setAddingChild] = useState(false);
+  const [addingIndex, setAddingIndex] = useState<number | null>(null);
   const isActive = selectedIds.includes(node.id);
   const isExpandable = node.type === NodeType.OBJECT || node.type === NodeType.ARRAY;
   const hasChildren = isExpandable && Array.isArray(node.children) && node.children.length > 0;
 
-  const [{ isDragging }, drag] = useDrag<DragItem, NodeDropResult, { isDragging: boolean }>({
+  const [{ isDragging }, drag] = useDrag<DragItem, unknown, { isDragging: boolean }>({
     type: 'NODE',
     item: { id: node.id, node, type: 'NODE' },
     collect: (monitor: DragSourceMonitor) => ({
@@ -52,13 +53,14 @@ export function JsonNode({
     }),
   });
 
-  const [{ isOver, canDrop }, drop] = useDrop<DragItem, NodeDropResult, { isOver: boolean; canDrop: boolean }>({
+  const [{ isOver, canDrop }, drop] = useDrop<DragItem, unknown, { isOver: boolean; canDrop: boolean }>({
     accept: 'NODE',
     drop: (item: DragItem) => {
       if (item.id !== node.id) {
-        onDrop(item.id, node.id);
+        const index = node.children ? node.children.length : 0;
+        onDrop(item.id, node.id, index);
       }
-      return { draggedId: item.id, targetId: node.id };
+      return undefined;
     },
     canDrop: (item: DragItem) => item.id !== node.id,
     collect: (monitor: DropTargetMonitor) => ({
@@ -137,20 +139,19 @@ export function JsonNode({
     onContextMenu(e, node);
   };
 
-  const handleAddClick = (e: React.MouseEvent) => {
+  const handleAddClick = (e: React.MouseEvent, index: number) => {
     e.stopPropagation();
-    setAddingChild(true);
+    setAddingIndex(index);
   };
 
-  const handleSelectAdd = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelectAdd = (e: React.ChangeEvent<HTMLSelectElement>, index: number) => {
     const value = e.target.value as NodeType;
     if (value && onAddChild) {
-      onAddChild(node.id, value);
+      onAddChild(node.id, value, index);
     }
-    setAddingChild(false);
+    setAddingIndex(null);
   };
-
-  const cancelAdd = () => setAddingChild(false);
+  const cancelAdd = () => setAddingIndex(null);
 
   const nodeClasses = [
     styles.node,
@@ -232,11 +233,11 @@ export function JsonNode({
           )}
         </span>
         {isExpandable && (
-          addingChild ? (
+          addingIndex !== null ? (
             <select
               autoFocus
               onBlur={cancelAdd}
-              onChange={handleSelectAdd}
+              onChange={(e) => handleSelectAdd(e, addingIndex)}
               className={styles.addSelect}
             >
               <option value="">add...</option>
@@ -248,25 +249,39 @@ export function JsonNode({
               <option value={NodeType.NULL}>null</option>
             </select>
           ) : (
-            <button className={styles.addButton} onClick={handleAddClick}>+</button>
+            <button className={styles.addButton} onClick={(e) => handleAddClick(e, node.children ? node.children.length : 0)}>+</button>
           )
         )}
       </div>
       {hasChildren && isExpanded && (
         <div className={styles.nodeChildren} role="group">
-          {node.children?.map((child) => (
-            <JsonNode
-              key={child.id}
-              node={child}
-              selectedIds={selectedIds}
-              level={level + 1}
-              onSelect={onSelect}
-              onUpdate={onUpdate}
-              onContextMenu={onContextMenu}
-              onDrop={onDrop}
-              onToggleExpand={onToggleExpand}
-              onAddChild={onAddChild}
-            />
+          <div className={styles.insertRow}>
+            <DropZone parentId={node.id} index={0} onDrop={onDrop} />
+            <button className={styles.addButton} onClick={(e) => handleAddClick(e, 0)}>+</button>
+          </div>
+          {node.children?.map((child, idx) => (
+            <React.Fragment key={child.id}>
+              <JsonNode
+                node={child}
+                selectedIds={selectedIds}
+                level={level + 1}
+                onSelect={onSelect}
+                onUpdate={onUpdate}
+                onContextMenu={onContextMenu}
+                onDrop={onDrop}
+                onToggleExpand={onToggleExpand}
+                onAddChild={onAddChild}
+              />
+              <div className={styles.insertRow}>
+                <DropZone parentId={node.id} index={idx + 1} onDrop={onDrop} />
+                <button
+                  className={styles.addButton}
+                  onClick={(e) => handleAddClick(e, idx + 1)}
+                >
+                  +
+                </button>
+              </div>
+            </React.Fragment>
           ))}
         </div>
       )}
