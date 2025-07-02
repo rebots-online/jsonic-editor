@@ -89,9 +89,25 @@ const JsonNodeDemo: React.FC = () => {
     console.log('Context menu for node:', node);
   };
 
-  const handleDrop = (draggedId: string, targetId: string) => {
-    console.log(`Dropped node ${draggedId} on ${targetId}`);
-    // Implement node reordering logic here
+  const handleDrop = (draggedId: string, parentId: string, index: number) => {
+    const moveNode = (node: JsonNode): JsonNode => {
+      if (!node.children) return node;
+      const draggedIdx = node.children.findIndex(c => c.id === draggedId);
+      if (draggedIdx !== -1) {
+        const [dragged] = node.children.splice(draggedIdx, 1);
+        if (node.id === parentId) {
+          node.children.splice(index, 0, dragged);
+        } else {
+          node.children = node.children.map(moveNode);
+          if (node.id === parentId) {
+            node.children.splice(index, 0, dragged);
+          }
+        }
+        return { ...node };
+      }
+      return { ...node, children: node.children.map(moveNode) };
+    };
+    setNodes(prev => ({ ...moveNode(prev) }));
   };
 
   const handleToggleExpand = (nodeId: string) => {
@@ -101,11 +117,12 @@ const JsonNodeDemo: React.FC = () => {
     }));
   };
 
-  const handleAddChild = (parentId: string, type: NodeType) => {
+  const handleAddChild = (parentId: string, type: NodeType, index = 0) => {
     const newNode = createNode(type);
     const addTo = (node: JsonNode): JsonNode => {
       if (node.id === parentId) {
-        const children = node.children ? [...node.children, newNode] : [newNode];
+        const children = node.children ? [...node.children] : [];
+        children.splice(index, 0, newNode);
         return { ...node, children };
       }
       return {
@@ -119,7 +136,7 @@ const JsonNodeDemo: React.FC = () => {
 
   const handleOpenFile = async () => {
     try {
-      const parsed = await fileHandler.openJson();
+      const { nodes: parsed } = await fileHandler.openDocument();
       const root: JsonNode = {
         id: 'root',
         type: NodeType.OBJECT,
