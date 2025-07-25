@@ -1,0 +1,308 @@
+[
+  {
+    "toolCallId": "call_d2bc6401d4af492dad9ca73a",
+    "name": "web_search",
+    "args": {
+      "query": "JSON visualization libraries node based"
+    },
+    "result": [
+      {
+        "title": "xyflow/awesome-node-based-uis",
+        "url": "https://github.com/xyflow/awesome-node-based-uis",
+        "content": "GitHubGitHubngx-graph - Graph visualization library for Angular; ngx-vflow - An open source library to build node-based UI with Angular; nice-dag - Lightweight javascript ..."
+      },
+      {
+        "title": "JSON Crack | Transform your data into interactive graphs",
+        "url": "https://jsoncrack.com/",
+        "content": "JSON CrackJSON CrackJSON Crack Editor is a tool for visualizing into graphs, analyzing, editing, formatting, querying, transforming and validating JSON, CSV, YAML, XML, ..."
+      },
+      {
+        "title": "Cytoscape.js",
+        "url": "https://js.cytoscape.org/",
+        "content": "Cytoscape.jsCytoscape.jsCytoscape.js is an open-source graph theory (aka network) library written in JS. You can use Cytoscape.js for graph analysis and visualisation."
+      },
+      {
+        "title": "A curated list of awesome JSON libraries and resources.",
+        "url": "https://github.com/burningtree/awesome-json",
+        "content": "GitHubGitHubJSON Viewer Pro (github - An open source Chrome extension for browsing JSON with syntax highlighting and folding, or as a visual graph. Discoverable JSON ( ..."
+      },
+      {
+        "title": "List of graph visualization libraries | by Elise Devaux - Medium",
+        "url": "https://elise-deux.medium.com/the-list-of-graph-visualization-libraries-7a7b89aab6a6",
+        "content": "Medium · Elise DevauxMedium · Elise DevauxThis list presents various graph (aka network) visualization libraries. Most of these libraries are free or open-source. A few are commercial products."
+      },
+      {
+        "title": "D3 by Observable | The JavaScript library for bespoke data ...",
+        "url": "https://d3js.org/",
+        "content": "D3.jsD3.jsThe JavaScript library for bespoke data visualization. Create custom dynamic visualizations with unparalleled flexibility."
+      },
+      {
+        "title": "Node-based data visualization library in c or objective c",
+        "url": "https://stackoverflow.com/questions/4684086/node-based-data-visualization-library-in-c-or-objective-c",
+        "content": "Stack OverflowStack OverflowI'm looking for a library in c or objective c that does node-data visualizations similar to http://arborjs.org/ node map graphic helpful answers include,"
+      },
+      {
+        "title": "JSON Visualizer – Demo applications & examples",
+        "url": "https://www.jointjs.com/demos/json-visualizer",
+        "content": "JointJSJointJSThis demo shows how to write a simple JSON visualizer using JointJS+. Use TreeLayout to automatically position nodes and add Record shapes to organize object ..."
+      },
+      {
+        "title": "React Flow: Node-Based UIs in React",
+        "url": "https://reactflow.dev/",
+        "content": "React FlowReact FlowWire your ideas with React Flow. A customizable React component for building node-based editors and interactive diagrams.NodeNode ToolbarBase NodeNode Tooltip"
+      }
+    ],
+    "executionTime": 1932
+  },
+  {
+    "toolCallId": "call_c83c788d709b4e0794e2492a",
+    "name": "web_search",
+    "args": {
+      "query": "Tauri framework capabilities file system access window management"
+    },
+    "result": [
+      {
+        "title": "Capabilities for Different Windows and Platforms",
+        "url": "https://v2.tauri.app/learn/security/capabilities-for-windows-and-platforms/",
+        "content": "Tauri 2.0Tauri 2.0Feb 22, 2025 — We have learned how to create multiple windows in a Tauri app and give them specific capabilities. Furthermore these capabilities can also be targeted to ...See moreMissing: framework ‎| Show results with: framework"
+      },
+      {
+        "title": "File System",
+        "url": "https://v2.tauri.app/plugin/file-system/",
+        "content": "Tauri 2.0Tauri 2.0Jun 18, 2025 — The file system plugin offers two ways of manipulating paths: the base directory and the path API.See moreTauri-apps/plugin-fsGlobal ShortcutPathMissing: framework ‎| Show results with: framework"
+      },
+      {
+        "title": "Capabilities",
+        "url": "https://v2.tauri.app/security/capabilities/",
+        "content": "Tauri 2.0Tauri 2.0May 2, 2025 — Tauri provides application and plugin developers with a capabilities system, to granually enable and constrain the core exposure to the application frontend.See moreMissing: framework ‎| Show results with: framework"
+      },
+      {
+        "title": "Tauri framework-Building lightweight desktop applications ...",
+        "url": "https://dev.to/tianyaschool/tauri-framework-building-lightweight-desktop-applications-with-rust-4k49",
+        "content": "DEV CommunityDEV CommunityMay 28, 2025 — Tauri is an open source framework built with Rust for creating lightweight, secure, and efficient desktop applications.See more"
+      },
+      {
+        "title": "Tauri Framework: Code-First Deep Dive : E1",
+        "url": "https://medium.com/@md.abir1203/tauri-framework-code-first-deep-dive-e1-5cd034babd5b",
+        "content": "Medium · AIAlchemist_Ab1rMedium · AIAlchemist_Ab1rTauri follows a multi-process architecture where the frontend (WebView) and backend (Rust) run in separate processes, communicating through secure IPC channels.See more"
+      },
+      {
+        "title": "File Management in Tauri 2.0 with Rust | Q. Wach",
+        "url": "https://quentinwach.com/blog/2024/11/26/files-in-tauri-v2.html",
+        "content": "quentinwach.comquentinwach.comNov 26, 2024 — If you are just getting started with Tauri 2.0, opening, modifying, and saving files can seem quite a bit tricky. If you choose to use Rust ..."
+      },
+      {
+        "title": "Working with files · tauri-apps tauri · Discussion #1579",
+        "url": "https://github.com/tauri-apps/tauri/discussions/1579",
+        "content": "GitHubGitHubApr 22, 2021 — We are wondering how do we work with opening files and saving files in a single window app or CLI app? Our app is not running node.See more"
+      },
+      {
+        "title": "Tauri V2 Overview",
+        "url": "https://huakun.tech/Full-Stack/Framework/Tauri/tauri-v2",
+        "content": "huakun.techhuakun.techJun 1, 2025 — Capabilities are a set of permissions mapped to app windows and webviews by their labels. Capability files are either defined as a JSON or a ...See more"
+      },
+      {
+        "title": "Configuration | Tauri v1",
+        "url": "https://tauri.app/v1/api/config/",
+        "content": "Tauri 2.0Tauri 2.0Jan 10, 2025 — In addition to the default configuration file, Tauri can read a platform-specific configuration from tauri.linux.conf.json , tauri.windows.conf.See more"
+      },
+      {
+        "title": "Tauri: Building Tiny, Fast, and Secure Native Apps",
+        "url": "https://medium.com/@asierr/tauri-building-tiny-fast-and-secure-native-apps-03ccebed336c",
+        "content": "Medium · asierr.devMedium · asierr.devTauri is a framework for building tiny, fast, and secure native applications using web technologies like HTML, CSS, and JavaScript.See more"
+      }
+    ],
+    "executionTime": 2209
+  },
+  {
+    "toolCallId": "call_1adad019e582462bbe1cf7b7",
+    "name": "list_allowed_directories",
+    "args": {},
+    "result": [
+      {
+        "type": "text",
+        "text": "Allowed directories:\n/home/robin/CascadeProjects/jsonic/helloword"
+      }
+    ],
+    "executionTime": 10
+  },
+  {
+    "toolCallId": "call_dfccc01364c847b181d4ec0e",
+    "name": "web_search",
+    "args": {
+      "query": "Tauri framework capabilities cross-platform desktop apps"
+    },
+    "result": [
+      {
+        "title": "Tauri 2.0 | Tauri",
+        "url": "https://v2.tauri.app/",
+        "content": "Tauri 2.0Tauri 2.0Tauri supports any frontend framework so you don't need to change your stack. Cross Platform. Build your app for Linux, macOS, Windows, Android and iOS - all ...Get StartedTauri-apps/plugin-httpTauri-apps/plugin-fsAbout TauriMissing: capabilities ‎| Show results with: capabilities"
+      },
+      {
+        "title": "tauri-apps/tauri: Build smaller, faster, and more secure ...",
+        "url": "https://github.com/tauri-apps/tauri",
+        "content": "GitHubGitHubTauri is a framework for building tiny, blazingly fast binaries for all major desktop platforms. Developers can integrate any front-end framework that compiles ..."
+      },
+      {
+        "title": "Cross-Platform Compilation | Tauri v1",
+        "url": "https://tauri.app/v1/guides/building/cross-platform/",
+        "content": "Tauri 2.0Tauri 2.0Jul 20, 2024 — Tauri Action leverages GitHub Actions to simultaneously build your application as a Tauri native binary for macOS, Linux, and Windows, and automates creating a ...Missing: capabilities ‎| Show results with: capabilities"
+      },
+      {
+        "title": "Tauri (1) — A desktop application development solution ...",
+        "url": "https://dev.to/rain9/tauri-1-a-desktop-application-development-solution-more-suitable-for-web-developers-38c2",
+        "content": "DEV CommunityDEV CommunityJan 25, 2025 — Tauri is a cross-platform desktop application framework that allows developers to use familiar web technologies (like HTML, CSS, JS, and frameworks such as Vue ..."
+      },
+      {
+        "title": "What is Tauri?",
+        "url": "https://v2.tauri.app/start/",
+        "content": "Tauri 2.0Tauri 2.0Oct 1, 2024 — The cross-platform app building toolkit. ... Tauri is a framework for building tiny, fast binaries for all major desktop and mobile platforms.About TauriTauri 1.0 ReleaseUpgrade from Tauri 1.0Prerequisites"
+      },
+      {
+        "title": "Build Cross-Platform Apps Using Rust and Tauri Framework",
+        "url": "https://www.w3resource.com/rust-tutorial/build-cross-platform-apps-tauri.php",
+        "content": "w3resourcew3resourceNov 23, 2024 — Tauri is a Rust-based framework for building lightweight, secure, and highly customizable cross-platform desktop applications."
+      },
+      {
+        "title": "Tauri adoption guide: Overview, examples, and alternatives",
+        "url": "https://blog.logrocket.com/tauri-adoption-guide/",
+        "content": "LogRocket BlogLogRocket BlogSep 26, 2024 — Tauri is an excellent toolkit for building lightweight, secure, and cross-platform desktop applications using web technologies."
+      },
+      {
+        "title": "From Browser to Desktop: How I Built My First App with Tauri",
+        "url": "https://medium.com/@hasindus48/from-browser-to-desktop-how-i-built-my-first-app-with-tauri-c69ceaabf6f6",
+        "content": "Medium · Hasindu ShehanMedium · Hasindu ShehanA beginner-friendly guide to creating a lightweight, cross-platform desktop app using web technologies and Tauri."
+      },
+      {
+        "title": "Tauri (software framework)",
+        "url": "https://en.wikipedia.org/wiki/Tauri_(software_framework)",
+        "content": "WikipediaWikipediaTauri is an open-source software framework designed to create cross-platform desktop and mobile applications on Linux, macOS, Windows, Android and iOS"
+      }
+    ],
+    "executionTime": 1997
+  },
+  {
+    "toolCallId": "call_ddc7b3bc1da24624abff2189",
+    "name": "list_directory",
+    "args": {
+      "path": "/home/robin/CascadeProjects/jsonic/helloword"
+    },
+    "result": [
+      {
+        "type": "text",
+        "text": "[DIR] 8hw2F5uXX_wHZy6_JAiXe\n[DIR] X4hemgdVGWs_W6vz-LJSn\n[DIR] json-concept-map-editor\n[DIR] r4ddgnuwFB1tFAaL63ThX"
+      }
+    ],
+    "executionTime": 11
+  },
+  {
+    "toolCallId": "call_6c659c738b7c40dcb636e5b8",
+    "name": "web_search",
+    "args": {
+      "query": "Tauri framework capabilities cross-platform desktop apps web technologies"
+    },
+    "result": [
+      {
+        "title": "Tauri 2.0 | Tauri",
+        "url": "https://v2.tauri.app/",
+        "content": "Tauri 2.0Tauri 2.0Tauri supports any frontend framework so you don't need to change your stack. Cross Platform. Build your app for Linux, macOS, Windows, Android and iOS - all ...Tauri-apps/plugin-httpTauri-apps/plugin-fsAbout TauriTauri v1Missing: capabilities ‎| Show results with: capabilities"
+      },
+      {
+        "title": "What is Tauri?",
+        "url": "https://v2.tauri.app/start/",
+        "content": "Tauri 2.0Tauri 2.0Oct 1, 2024 — Tauri is a framework for building tiny, fast binaries for all major desktop and mobile platforms. Developers can integrate any frontend framework that compiles ...About TauriPrerequisitesTauri 1.0 ReleaseUpgrade from Tauri 1.0"
+      },
+      {
+        "title": "tauri-apps/tauri: Build smaller, faster, and more secure ...",
+        "url": "https://github.com/tauri-apps/tauri",
+        "content": "GitHubGitHubTauri is a framework for building tiny, blazingly fast binaries for all major desktop platforms. Developers can integrate any front-end framework that compiles ...Missing: technologies ‎| Show results with: technologies"
+      },
+      {
+        "title": "Tauri (1) — A desktop application development solution ...",
+        "url": "https://dev.to/rain9/tauri-1-a-desktop-application-development-solution-more-suitable-for-web-developers-38c2",
+        "content": "DEV CommunityDEV CommunityJan 25, 2025 — Tauri is a cross-platform desktop application framework that allows developers to use familiar web technologies (like HTML, CSS, JS, and frameworks such as Vue ..."
+      },
+      {
+        "title": "From Browser to Desktop: How I Built My First App with Tauri",
+        "url": "https://medium.com/@hasindus48/from-browser-to-desktop-how-i-built-my-first-app-with-tauri-c69ceaabf6f6",
+        "content": "Medium · Hasindu ShehanMedium · Hasindu ShehanTauri is a framework that lets you build cross-platform desktop applications using the same web tech you already know — paired with a Rust-based ..."
+      },
+      {
+        "title": "Build Cross-Platform Apps Using Rust and Tauri Framework",
+        "url": "https://www.w3resource.com/rust-tutorial/build-cross-platform-apps-tauri.php",
+        "content": "w3resourcew3resourceNov 23, 2024 — Tauri is a Rust-based framework for building lightweight, secure, and highly customizable cross-platform desktop applications."
+      },
+      {
+        "title": "Tauri 1.0 Release",
+        "url": "https://v2.tauri.app/blog/tauri-1-0/",
+        "content": "Tauri 2.0Tauri 2.0Jan 24, 2025 — Tauri is an app construction toolkit that lets you build software for all major desktop operating systems using web technologies."
+      },
+      {
+        "title": "My Experiments with ̷T̷r̷u̷t̷h̷ Tauri",
+        "url": "https://medium.com/@louremipsum/my-experiments-with-%CC%B7t%CC%B7r%CC%B7u%CC%B7t%CC%B7h%CC%B7-tauri-503986b8c451",
+        "content": "Medium · Vinayak NigamMedium · Vinayak NigamTauri is an open-source application development platform that allows developers to create desktop and mobile applications using web technologies like HTML, CSS ..."
+      }
+    ],
+    "executionTime": 1962
+  },
+  {
+    "toolCallId": "call_77d240192f214400bda9c420",
+    "name": "web_search",
+    "args": {
+      "query": "JSON comments handling approaches JSONC metadata files custom formats"
+    },
+    "result": [
+      {
+        "title": "Comments in JSON: Workarounds, Risks, and Best Practices",
+        "url": "https://medium.com/@keployio/comments-in-json-workarounds-risks-and-best-practices-202a00a4616c",
+        "content": "Medium · KeployioMedium · KeployioJSONC (JSON with Comments) is a variant that allows comments but isn't compatible with standard JSON parsers. During development, you can use ..."
+      },
+      {
+        "title": "Can comments be used in JSON?",
+        "url": "https://stackoverflow.com/questions/244777/can-comments-be-used-in-json",
+        "content": "Stack OverflowStack OverflowNo. JSON is data-only. If you include a comment, then it must be data too. You could have a designated data element called \"_comment\" (or something) that ..."
+      },
+      {
+        "title": "How To Use JSON with Comments for Configs",
+        "url": "https://dev.to/zirkelc/how-to-use-json-with-comments-for-configs-2clc?url=https%3A%2F%2Fdev.to%2Fzirkelc%2Fhow-to-use-json-with-comments-for-configs-2clc",
+        "content": "DEV CommunityDEV CommunityMay 26, 2024 — The problem with custom JSON formats like JSON5, JSONC, HJSON, etc is that they are not well supported by the tools that use them. Do you ...Missing: approaches ‎| Show results with: approaches"
+      },
+      {
+        "title": "JSON parsers that can accept comments",
+        "url": "https://news.ycombinator.com/item?id=42360390",
+        "content": "Hacker NewsHacker NewsJSON as a data-format should not have comments. JSON as a file-format should ... As a file format, just use jsonc or json5, if you want to use comments."
+      },
+      {
+        "title": "Comments Inside JSON – Commenting in a JSON File",
+        "url": "https://www.freecodecamp.org/news/comments-in-json/",
+        "content": "freeCodeCampfreeCodeCampMar 31, 2023 — This article will show you how to include comments in JSON files and why JSON does not natively support comments.Missing: JSONC ‎| Show results with: JSONC"
+      },
+      {
+        "title": "Can comments be used in JSON? - ...",
+        "url": "https://stackoverflow.com/questions/244777/can-comments-be-used-in-json/55238032",
+        "content": "Stack OverflowStack OverflowAlthough JSON does not support comments, JSONC does. Name your file with '.jsonc' extension and use a jsonc parser. jsonWithComments.jsonc."
+      },
+      {
+        "title": "json5 vs strip-json-comments vs jsonc-parser vs comment-json",
+        "url": "https://npm-compare.com/comment-json,json5,jsonc-parser,strip-json-comments",
+        "content": "npm-compare.comnpm-compare.comjsonc-parser supports comments in JSON, including single-line and multi-line comments. It ignores comments during parsing and does not preserve them, making it ..."
+      },
+      {
+        "title": "Tools for JSON Comments and JSON Lines",
+        "url": "https://www.altova.com/blog/2021/09/tools-for-json-comments-and-json-lines",
+        "content": "AltovaAltovaSep 1, 2021 — To that end, the JSON Comments (JSONC) format has been introduced to allow for processing of JSON files that include comments. With JSONC ..."
+      },
+      {
+        "title": "Discussion of How To Use JSON with Comments for Configs",
+        "url": "https://dev.to/zirkelc/how-to-use-json-with-comments-for-configs-2clc/comments",
+        "content": "DEV CommunityDEV CommunityMay 26, 2024 — The problem with custom JSON formats like JSON5, JSONC, HJSON, etc is that they are not well supported by the tools that use them. Do you ...Missing: approaches ‎| Show results with: approaches"
+      },
+      {
+        "title": "How to Comment in a JSON File: Workarounds and Best ...",
+        "url": "https://medium.com/@keployio/how-to-comment-in-a-json-file-workarounds-and-best-practices-1e3e6a8f07c5",
+        "content": "Medium · KeployioMedium · KeployioThis blog will explore why JSON doesn't support comments, common workarounds, and best practices to keep your files clean and maintainable."
+      }
+    ],
+    "executionTime": 1951
+  }
+]

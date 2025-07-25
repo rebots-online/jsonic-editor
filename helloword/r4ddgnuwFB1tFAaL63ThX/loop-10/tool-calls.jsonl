@@ -1,0 +1,16 @@
+[
+  {
+    "toolCallId": "call_47ff090992384a6badcd70c9",
+    "name": "final_answer",
+    "args": {
+      "title": "Tauri JSON Concept Map Editor Implementation Plan",
+      "format": "detailed",
+      "isDeepResearch": false
+    },
+    "result": {
+      "success": true,
+      "message": "Final answer generated"
+    },
+    "executionTime": 23
+  }
+]
