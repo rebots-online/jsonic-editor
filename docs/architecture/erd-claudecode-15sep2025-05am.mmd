@@ -1,0 +1,74 @@
+```mermaid
+erDiagram
+    APP ||--o{ UI_STATE : manages
+    APP ||--o{ DOCUMENT_STATE : manages
+    APP ||--o{ PREFERENCES : has
+
+    DOCUMENT_STATE {
+        string id
+        JsonNode[] nodes
+        datetime last_modified
+    }
+
+    UI_STATE {
+        string active_node_id
+        string[] selected_nodes
+        string theme
+        boolean modal_open
+    }
+
+    PREFERENCES {
+        string theme
+        json shortcuts
+        boolean auto_save
+        number font_size
+    }
+
+    DOCUMENT_STATE ||--o{ JSON_NODE : contains
+    JSON_NODE ||--o{ JSON_NODE : parent
+
+    JSON_NODE {
+        string id PK
+        NodeType type
+        string key
+        any value
+        string parent_id FK
+        Position position
+        boolean expanded
+        datetime created_at
+        datetime modified_at
+    }
+
+    POSITION {
+        number x
+        number y
+    }
+
+    HISTORY_ACTION {
+        string id PK
+        ActionType type
+        json payload
+        string node_id FK
+        datetime timestamp
+    }
+
+    JSON_NODE ||--o{ HISTORY_ACTION : tracks
+
+    enum NodeType {
+        OBJECT
+        ARRAY
+        STRING
+        NUMBER
+        BOOLEAN
+        NULL
+    }
+
+    enum ActionType {
+        CREATE
+        UPDATE
+        DELETE
+        MOVE
+        EXPAND
+        COLLAPSE
+    }
+```

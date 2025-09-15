@@ -1,0 +1,74 @@
+```mermaid
+graph TB
+    subgraph "User Interface Layer"
+        UI[User Interface]
+        NB[Navigation Bar]
+        EC[Editor Canvas]
+        JN[JSON Nodes]
+        CM[Context Menu]
+        PM[Preferences Modal]
+    end
+
+    subgraph "State Management Layer"
+        AS[App Store]
+        DS[Document Store]
+        US[UI Store]
+        HM[History Manager]
+    end
+
+    subgraph "Core Logic Layer"
+        JP[JSON Parser]
+        FH[File Handler]
+        SV[Schema Validator]
+        GP[Generic Parser]
+    end
+
+    subgraph "Utilities Layer"
+        SM[Shortcut Manager]
+        TM[Theme Manager]
+        LH[Logger]
+        EH[Error Handler]
+    end
+
+    subgraph "Data Layer"
+        FS[File System]
+        LS[Local Storage]
+        MEM[In-Memory State]
+    end
+
+    %% Current Implementation Flow
+    UI --> Demo[Demo Component]
+    Demo --> JN
+    JN --> JP
+    JN --> FH
+    Demo --> SM
+
+    %% Intended Architecture
+    NB --> FH
+    NB --> PM
+    EC --> JN
+    JN --> CM
+    JN --> AS
+    AS --> DS
+    AS --> US
+    DS --> HM
+    JP --> DS
+    SV --> DS
+    GP --> FH
+    SM --> UI
+    TM --> UI
+    LH --> Core
+    EH --> Core
+
+    FH --> FS
+    TM --> LS
+    AS --> MEM
+
+    classDef implemented fill:#e8f5e9,stroke:#2e7d32
+    classDef partial fill:#fff3e0,stroke:#ef6c00
+    classDef missing fill:#ffebee,stroke:#c62828
+
+    class JP,FH,JN,Demo implemented
+    class AS,DS,US,SM partial
+    class NB,EC,CM,PM,HM,SV,TM missing
+```
