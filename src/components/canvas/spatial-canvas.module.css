@@ -1,0 +1,225 @@
+.spatialCanvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.05) 0%, transparent 50%),
+    linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.canvasContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.canvasContent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+  transition: transform 0.1s ease-out;
+}
+
+.connectionsLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.canvasNode {
+  position: absolute;
+  transition: z-index 0.2s ease;
+}
+
+.canvasNode:hover {
+  z-index: 20 !important;
+}
+
+.canvasControls {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 0.75rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+}
+
+.canvasControls button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: #f8f9fa;
+  color: #495057;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.canvasControls button:hover {
+  background: #e9ecef;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.canvasControls button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.zoomLevel {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #6c757d;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #dee2e6;
+}
+
+.statusBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: rgba(33, 37, 41, 0.9);
+  color: white;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  backdrop-filter: blur(10px);
+  z-index: 100;
+}
+
+.statusBar span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Thought bubble styling for nodes */
+.canvasNode :global(.node) {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 2px solid #e9ecef;
+  border-radius: 20px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: visible;
+}
+
+.canvasNode :global(.node::before) {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 20px;
+  width: 16px;
+  height: 16px;
+  background: inherit;
+  border: 2px solid #e9ecef;
+  border-bottom: none;
+  border-right: none;
+  transform: rotate(-45deg);
+  border-radius: 4px 0 0 0;
+  z-index: -1;
+}
+
+.canvasNode :global(.node:hover) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border-color: #1976d2;
+}
+
+.canvasNode :global(.node.active) {
+  border-color: #1976d2;
+  box-shadow:
+    0 0 0 3px rgba(25, 118, 210, 0.2),
+    0 8px 32px rgba(0, 0, 0, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Connection animations */
+.connectionsLayer line {
+  animation: drawConnection 0.5s ease-out;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+@keyframes drawConnection {
+  from {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .canvasControls {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .canvasControls button {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .zoomLevel {
+    font-size: 0.6875rem;
+  }
+
+  .statusBar {
+    height: 24px;
+    font-size: 0.75rem;
+    padding: 0 0.5rem;
+  }
+}
+
+/* Performance optimizations */
+.spatialCanvas {
+  will-change: transform;
+}
+
+.canvasContent {
+  contain: layout style paint;
+}
+
+.canvasNode {
+  contain: layout style;
+}

@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { JsonNode, NodeType } from '../../types/core';
 import { FileHandler } from '../../core/file-io/file-handler';
 import { JsonParser } from '../../core/parser/json-parser';
-import { JsonNode as JsonNodeComponent } from '../nodes/json-node';
+import { JsonNode as JsonNodeComponent } from '../nodes/json-node-fixed';
 import { testData } from '../../mocks/test-data';
 
 const styles = {
@@ -32,6 +32,7 @@ const JsonNodeDemo: React.FC = () => {
   const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({});
   const fileHandler = new FileHandler();
   const parser = new JsonParser();
+
   const createNode = (type: NodeType): JsonNode => {
     return {
       id: uuidv4(),
@@ -53,9 +54,9 @@ const JsonNodeDemo: React.FC = () => {
     };
   };
 
-  const handleSelect = (nodeId: string, e: React.MouseEvent) => {
+  const handleSelect = (nodeId: string, e?: React.MouseEvent | React.KeyboardEvent) => {
     setSelectedNodeIds(prev => {
-      if (e.shiftKey || e.ctrlKey || e.metaKey) {
+      if (e && (e.shiftKey || e.ctrlKey || e.metaKey)) {
         return prev.includes(nodeId)
           ? prev.filter(id => id !== nodeId)
           : [...prev, nodeId];

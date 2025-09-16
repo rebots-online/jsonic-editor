@@ -1,0 +1,149 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.app-main {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background-color: #fafafa;
+  background-image:
+    radial-gradient(circle, #e0e0e0 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.canvas-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  min-height: 600px;
+}
+
+.nodes-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+}
+
+.canvas-node {
+  position: absolute;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
+}
+
+.canvas-node:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  text-align: center;
+  color: #666;
+}
+
+.empty-state h2 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.empty-state button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.empty-state button:hover {
+  background-color: #1565c0;
+}
+
+/* Canvas controls */
+.canvas-controls {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.canvas-control-button {
+  padding: 0.5rem;
+  background: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.canvas-control-button:hover {
+  background: #e8e8e8;
+}
+
+.canvas-control-button:active {
+  transform: scale(0.95);
+}
+
+/* Status bar */
+.status-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: #333;
+  color: white;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  justify-content: space-between;
+}
+
+.status-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Responsive canvas */
+@media (max-width: 768px) {
+  .canvas-controls {
+    bottom: 0.5rem;
+    right: 0.5rem;
+  }
+
+  .canvas-control-button {
+    padding: 0.375rem;
+    font-size: 0.75rem;
+  }
+
+  .status-bar {
+    height: 20px;
+    font-size: 0.6875rem;
+    padding: 0 0.5rem;
+  }
+}
