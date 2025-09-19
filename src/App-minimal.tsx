@@ -1,24 +1,70 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { NavigationBar } from './components/navigation/navigation-bar';
 
-export const AppMinimal: React.FC = () => {
+console.log('📦 App-minimal.tsx: Starting minimal app...');
+
+const App: React.FC = () => {
+  const [jsonContent, setJsonContent] = useState<string>('');
+
+  const handleFileOpen = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const content = e.target?.result as string;
+          setJsonContent(content);
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
+
+  const handleFileSave = () => {
+    if (!jsonContent) return;
+
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handlePreferencesOpen = () => {
+    console.log('Open preferences');
+  };
+
   return (
-    <div style={{
-      padding: '20px',
-      fontFamily: 'Arial, sans-serif',
-      backgroundColor: '#f5f5f5',
-      minHeight: '100vh'
-    }}>
-      <h1 style={{ color: '#1976d2' }}>🎯 JSONIC Editor - Minimal Test</h1>
-      <p>If you can see this, React is working!</p>
-      <div style={{
-        padding: '10px',
-        backgroundColor: 'white',
-        borderRadius: '4px',
-        marginTop: '20px'
-      }}>
-        <h2>✅ Basic Rendering Test</h2>
-        <p>This is a minimal test to verify React components can render.</p>
-      </div>
+    <div className="app">
+      <NavigationBar
+        onFileOpen={handleFileOpen}
+        onFileSave={handleFileSave}
+        onPreferencesOpen={handlePreferencesOpen}
+      />
+      <main className="app-main">
+        <div className="editor-container">
+          <div className="empty-state">
+            <h2>Welcome to JSONIC Editor</h2>
+            <p>Open a JSON file to start editing, or create a new one.</p>
+            <button onClick={handleFileOpen}>Open JSON File</button>
+          </div>
+
+          {jsonContent && (
+            <div className="json-preview">
+              <h3>JSON Content:</h3>
+              <pre>{jsonContent}</pre>
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 };
+
+export default App;

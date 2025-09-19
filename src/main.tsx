@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
+import App from './App-minimal';
 import { ErrorBoundary } from './components/error-boundary/ErrorBoundary';
 import { ErrorDisplay } from './components/error-boundary/ErrorDisplay';
 
