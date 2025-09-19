@@ -8,6 +8,8 @@ import { JsonParser } from './core/parser/json-parser';
 import { SpatialCanvas } from './components/canvas/spatial-canvas';
 import './App-canvas.css';
 
+console.log('📦 App.tsx: Starting to import modules...');
+
 interface JsonNodeWithPosition extends JsonNode {
   position: { x: number; y: number };
 }

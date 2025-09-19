@@ -1,0 +1,17 @@
+╭───────────────────────────────────────────────────╮
+│ ✻ Welcome to Claude Code!                         │
+│                                                   │
+│   /help for help, /status for your current setup  │
+│                                                   │
+│   cwd: /home/robin/CascadeProjects/jsonic-editor  │
+│                                                   │
+│   ─────────────────────────────────────────────── │
+│                                                   │
+│   Overrides (via env):                            │
+│                                                   │
+│   • API Base URL: https://api.z.ai/api/anthropic  │
+╰───────────────────────────────────────────────────╯
+
+> /model 
+  ⎿  Kept model as glm-4.5
+
