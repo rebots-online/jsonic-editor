@@ -1,0 +1,274 @@
+[
+  {
+    "toolCallId": "call_cc7b0f24b49a4098a69328a2",
+    "name": "web_search",
+    "args": {
+      "query": "mind mapping tools keyboard navigation UX"
+    },
+    "result": [
+      {
+        "title": "Xmind - Mind Mapping App",
+        "url": "https://xmind.com/",
+        "content": "XmindXmindXmind is the most professional and popular mind mapping tool. Millions of people use Xmind to clarify thinking, manage complex information, brainstorming, ...Missing: UX ‎| Show results with: UX"
+      },
+      {
+        "title": "20 Best Free Mind Mapping Software For Getting Creative ...",
+        "url": "https://thedigitalprojectmanager.com/tools/best-free-mind-mapping-software/",
+        "content": "The Digital Project ManagerThe Digital Project ManagerJun 17, 2025 — Discover the best free mind mapping software for your team. Compare features, pros + cons, pricing, and more in my complete guide."
+      },
+      {
+        "title": "MindMup",
+        "url": "https://www.mindmup.com/",
+        "content": "MindMupMindMupMindMup is great for individual note-taking, collaborative planning, teamwork and classrooms. 1 Powerful keyboard shortcuts speed up your work; 2 Frictionless ..."
+      },
+      {
+        "title": "What are Mind Maps? — updated 2025 | IxDF",
+        "url": "https://www.interaction-design.org/literature/topics/mind-maps?srsltid=AfmBOoro448QnFWZxDINdLVaD9JUeMc2ooWijZUekj_C75d5ifrJ-SeY",
+        "content": "The Interaction Design FoundationThe Interaction Design FoundationMind maps are visual diagrams that structure information around a central idea, with linked ideas branching out.Why are Mind Maps Important...What are Helpful Tools for..."
+      },
+      {
+        "title": "Mindmap Keyboard Navigation?",
+        "url": "https://community.miro.com/ask-the-community-45/mindmap-keyboard-navigation-8610",
+        "content": "Miro Community ForumMiro Community ForumMay 24, 2022 — Just curious to know how to navigate Miro mindmaps using only the keyboard. For example, right now I'm at a UX conference taking notes like mad.Missing: tools ‎| Show results with: tools"
+      },
+      {
+        "title": "Online mind mapping tools - Łukasz Nojek",
+        "url": "https://lukasznojek.com/blog/2019/08/online-mind-mapping-tools/",
+        "content": "lukasznojek.comlukasznojek.comAug 5, 2019 — Bubbl.us was the first specialized mind mapping tool I checked. It includes integrated help which I used to look up the keyboard shortcuts."
+      },
+      {
+        "title": "10 Mind Map Maker Tools for Professional Results",
+        "url": "https://insight7.io/10-mind-map-maker-tools-for-professional-results/",
+        "content": "Insight7Insight7This software allows users to create visually appealing mind maps that help promote clear thinking and effective communication. Its user-friendly interface ..."
+      },
+      {
+        "title": "Free Online Mind Map Creator",
+        "url": "https://www.mural.co/use-case/mind-map",
+        "content": "MuralMuralA collaborative mind mapping tool designed for teamwork · Start from a blank canvas or with one of Mural's dozens of brainstorming and mind mapping templates."
+      },
+      {
+        "title": "The best mind mapping software in 2025",
+        "url": "https://zapier.com/blog/best-mind-mapping-software/",
+        "content": "ZapierZapierJul 1, 2025 — We tested dozens of mind mapping tools, and here we'll present the 6 best to help you decide which is right for mapping that mind of yours.Missing: UX ‎| Show results with: UX"
+      },
+      {
+        "title": "Expressing Ideas Through Mind Maps",
+        "url": "https://www.uxmatters.com/mt/archives/2022/12/expressing-ideas-through-mind-maps.php",
+        "content": "UXmattersUXmattersDec 19, 2022 — A mind map takes ideas and concepts that can be both literal and exploratory and expresses them using text, shapes, colors, lines, arrows, and images."
+      }
+    ],
+    "executionTime": 1857
+  },
+  {
+    "toolCallId": "call_f2d4dc523532477eb7b044bb",
+    "name": "web_search",
+    "args": {
+      "query": "JSON visualization libraries node based editing drag drop"
+    },
+    "result": [
+      {
+        "title": "xyflow/awesome-node-based-uis",
+        "url": "https://github.com/xyflow/awesome-node-based-uis",
+        "content": "GitHubGitHubyFiles - Library for visualizing, editing and analyzing graphs. Layouting ... - A C# library with a WPF node editor component based on ReactiveUI."
+      },
+      {
+        "title": "Cytoscape.js",
+        "url": "https://js.cytoscape.org/",
+        "content": "Cytoscape.jsCytoscape.jsCytoscape.js is an open-source graph theory (aka network) library written in JS. You can use Cytoscape.js for graph analysis and visualisation."
+      },
+      {
+        "title": "JSON Visualizer – Demo applications & examples",
+        "url": "https://www.jointjs.com/demos/json-visualizer",
+        "content": "JointJSJointJSThis demo shows how to write a simple JSON visualizer using JointJS+. Insert any JSON data into the left panel and see its visual representation."
+      },
+      {
+        "title": "Top 10 JavaScript Libraries for Knowledge Graph Visualization",
+        "url": "https://www.getfocal.co/post/top-10-javascript-libraries-for-knowledge-graph-visualization",
+        "content": "getfocal.cogetfocal.coDec 24, 2024 — Looking to visualize complex data relationships? Here are the best JavaScript libraries for creating interactive knowledge graph visualizations."
+      },
+      {
+        "title": "json-editor/json-editor: JSON Schema Based Editor",
+        "url": "https://github.com/json-editor/json-editor",
+        "content": "GitHubGitHubDrag and drop for array item is supported to perform a quick item moving. For array editor with format= tabs or tabs-top , you can drag the tab header directly."
+      },
+      {
+        "title": "React Flow: Node-Based UIs in React",
+        "url": "https://reactflow.dev/",
+        "content": "React FlowReact FlowThe things you need are already there: dragging nodes, zooming, panning, selecting multiple nodes, and adding/removing elements are all built-in. Get started.Missing: JSON ‎| Show results with: JSON"
+      },
+      {
+        "title": "How to draw nodes in D3 Javascript library based on JSON ...",
+        "url": "https://stackoverflow.com/questions/19966843/how-to-draw-nodes-in-d3-javascript-library-based-on-json-file",
+        "content": "Stack OverflowStack OverflowWith this HTML file, I drew only three circles because the code is based on the fact that there are three names. I would like to draw five nodes ...Missing: editing ‎| Show results with: editing"
+      },
+      {
+        "title": "JSON•Edit•React",
+        "url": "https://carlosnz.github.io/json-edit-react/",
+        "content": "GitHubGitHub\"You can edit individual values, or even a whole object node at once (as JSON text)\". 4: \"You can also drag and drop!\"."
+      },
+      {
+        "title": "20+ JavaScript libraries to draw your own diagrams (2024 ...",
+        "url": "https://modeling-languages.com/javascript-drawing-libraries-diagrams/",
+        "content": "modeling-languages.commodeling-languages.comJan 10, 2024 — This post showcases an exciting selection of over 20 JavaScript drawing libraries, enabling you to create bespoke visual tools and integrate advanced graphical ..."
+      }
+    ],
+    "executionTime": 1984
+  },
+  {
+    "toolCallId": "call_cd51870440864122bf10f64c",
+    "name": "list_directory",
+    "args": {
+      "path": "/home/robin/CascadeProjects/jsonic"
+    },
+    "result": [
+      {
+        "type": "text",
+        "text": "Access denied - path outside allowed directories: /home/robin/CascadeProjects/jsonic not in /home/robin/CascadeProjects/jsonic/helloword"
+      }
+    ],
+    "executionTime": 11
+  },
+  {
+    "toolCallId": "call_8845abd8a100439eaea7e80c",
+    "name": "web_search",
+    "args": {
+      "query": "JavaScript TypeScript libraries node-based UI editors graph visualization"
+    },
+    "result": [
+      {
+        "title": "xyflow/awesome-node-based-uis",
+        "url": "https://github.com/xyflow/awesome-node-based-uis",
+        "content": "GitHubGitHublitegraph.js - A graph node engine and editor; mermaid - Static diagrams for documentation; ngx-graph - Graph visualization library for Angular; ngx-vflow - An ...Pull requests 6ActionsIssues 2Security"
+      },
+      {
+        "title": "18 Top JavaScript Graph Visualization Libraries in 2025",
+        "url": "https://www.monterail.com/blog/javascript-libraries-data-visualization",
+        "content": "MonterailMonterailRecharts; Victory; React-vis; V Charts; Chartkick; Flexmonster; Webdatarocks; ApexCharts; Chart.js; Echarts; Nivo; Google Charts; amCharts ..."
+      },
+      {
+        "title": "Rete.js - JavaScript framework for visual programming",
+        "url": "https://retejs.org/",
+        "content": "Rete.jsRete.jsJavaScript framework for visual programming. A tailorable TypeScript-first framework for creating processing-oriented node-based editors."
+      },
+      {
+        "title": "Tools for building a Graph/Node based user interface in ...",
+        "url": "https://stackoverflow.com/questions/72164885/tools-for-building-a-graph-node-based-user-interface-in-a-webapp",
+        "content": "Stack OverflowStack OverflowLitegraph.​​ A library in Javascript to create graphs in the browser similar to Unreal Blueprints. Nodes can be programmed easily and it includes ..."
+      },
+      {
+        "title": "20+ JavaScript libraries to draw your own diagrams (2024 ...",
+        "url": "https://modeling-languages.com/javascript-drawing-libraries-diagrams/",
+        "content": "modeling-languages.commodeling-languages.comJan 10, 2024 — Svelvet is a lightweight Svelte component library for building interactive node-based user interfaces and diagrams. It relies on D3 library ..."
+      },
+      {
+        "title": "Cytoscape.js",
+        "url": "https://js.cytoscape.org/",
+        "content": "Cytoscape.jsCytoscape.jsCytoscape.js is an open-source graph theory (aka network) library written in JS. You can use Cytoscape.js for graph analysis and visualisation."
+      },
+      {
+        "title": "React Flow: Node-Based UIs in React",
+        "url": "https://reactflow.dev/",
+        "content": "React FlowReact FlowWire your ideas with React Flow. A customizable React component for building node-based editors and interactive diagrams."
+      },
+      {
+        "title": "JavaScript Graph Node Based UI, GUI and Libraries - Sinan Isler",
+        "url": "https://sinanisler.com/javascript-graph-node-based-ui-gui-and-libraries/",
+        "content": "sinanisler.comsinanisler.comDec 20, 2023 — litegraph.js – A graph node engine and editor; mermaid – Static diagrams for documentation; ngx-graph – Graph visualization library for Angular ..."
+      },
+      {
+        "title": "D3 by Observable | The JavaScript library for bespoke data ...",
+        "url": "https://d3js.org/",
+        "content": "D3.jsD3.jsThe JavaScript library for bespoke data visualization. Create custom dynamic visualizations with unparalleled flexibility.Getting startedWhat is D3?D3-hierarchyD3-shape"
+      },
+      {
+        "title": "Sigma.js",
+        "url": "https://www.sigmajs.org/",
+        "content": "Sigma.jsSigma.jsSigma.js is a modern JavaScript library for rendering and interacting with network graphs in the browser. It works in symbiosis with graphology.Node drag'n'drop, with mouse...Load GEXF file ⋅ StorybookOpen in StorybookMissing: TypeScript ‎| Show results with: TypeScript"
+      }
+    ],
+    "executionTime": 1992
+  },
+  {
+    "toolCallId": "call_bbd0d88f5a3249ecb53ae24c",
+    "name": "list_directory",
+    "args": {
+      "path": "/home/robin/CascadeProjects/jsonic/helloword/json-concept-map-editor"
+    },
+    "result": [
+      {
+        "type": "text",
+        "text": ""
+      }
+    ],
+    "executionTime": 11
+  },
+  {
+    "toolCallId": "call_ad39a08f358a4fd28f1525e4",
+    "name": "web_search",
+    "args": {
+      "query": "JavaScript TypeScript libraries node-based UI editors graph visualization React Flow"
+    },
+    "result": [
+      {
+        "title": "React Flow: Node-Based UIs in React",
+        "url": "https://reactflow.dev/",
+        "content": "React FlowReact FlowWire your ideas with React Flow. A customizable React component for building node-based editors and interactive diagrams.React Flow ProUINodeUsage with TypeScript"
+      },
+      {
+        "title": "xyflow/awesome-node-based-uis",
+        "url": "https://github.com/xyflow/awesome-node-based-uis",
+        "content": "GitHubGitHubreact-digraph - A library for creating directed graph editors; React Flow - React library for rendering node-based UIs; reaflow - React library for building ...Pull requests 6ActionsIssues 2Security"
+      },
+      {
+        "title": "Getting started with React Flow UI",
+        "url": "https://reactflow.dev/learn/tutorials/getting-started-with-react-flow-components",
+        "content": "React FlowReact Flow4 days ago — React Flow - Customizable library for rendering workflows, diagrams and node-based UIs."
+      },
+      {
+        "title": "reactflow",
+        "url": "https://www.npmjs.com/package/reactflow",
+        "content": "NPMNPMJun 20, 2024 — A highly customizable React library for building node-based editors and interactive flow charts. Latest version: 11.11.4, last published: a ..."
+      },
+      {
+        "title": "Examples",
+        "url": "https://reactflow.dev/examples",
+        "content": "React FlowReact FlowJul 14, 2025 — Browse our examples for practical copy-paste solutions to common use cases with React Flow. Here you can find our MIT Licensed examples.Turbo FlowNode ToolbarHorizontal FlowDelete Middle Node"
+      },
+      {
+        "title": "yFiles Layout Algorithms for React Flow",
+        "url": "http://www.yworks.com/pages/yfiles-layout-algorithms-for-react-flow",
+        "content": "yWorksyWorksReact Flow is an open-source library designed for building interactive graphs and node-based editors within React applications. It offers basic editing features ..."
+      },
+      {
+        "title": "xyflow/xyflow: React Flow | Svelte Flow - Powerful open ...",
+        "url": "https://github.com/xyflow/xyflow",
+        "content": "GitHubGitHubPowerful open source libraries for building node-based UIs with React or Svelte. Ready out-of-the-box and infinitely customizable. React Flow · Svelte Flow · ...Missing: visualization ‎| Show results with: visualization"
+      },
+      {
+        "title": "React Flow - A Library for Rendering Interactive Graphs",
+        "url": "https://webkid.io/blog/react-flow-node-based-graph-library/",
+        "content": "webkidwebkidMay 5, 2020 — A library for rendering interactive node-based graphs with a smooth panning and zooming behaviour and lots of nice features and even some useful plugins like a ..."
+      },
+      {
+        "title": "Visualizing Rap History: Layered & Radial Graph Algorithms",
+        "url": "https://dtoyoda10.medium.com/building-complex-graph-diagrams-with-react-flow-elk-js-and-dagre-js-8832f6a461c5",
+        "content": "Medium · Daichi ToyodaMedium · Daichi ToyodaReact Flow is a declarative component library for React that simplifies the creation of node-based editors and interactive diagrams. It ..."
+      }
+    ],
+    "executionTime": 1850
+  },
+  {
+    "toolCallId": "call_03cb325d86524c3fa1b7f17e",
+    "name": "list_directory",
+    "args": {
+      "path": "/home/robin/CascadeProjects/jsonic/helloword/json-concept-map-editor"
+    },
+    "result": [
+      {
+        "type": "text",
+        "text": ""
+      }
+    ],
+    "executionTime": 12
+  }
+]

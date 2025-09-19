@@ -4,8 +4,8 @@
 **jsonic-editor** is a web-based application that provides a visual, concept-map-like interface for editing JSON files. Instead of traditional nested brackets, JSON content is displayed as "thought bubble" shapes to prevent bracket-matching errors and improve readability.
 
 **Author**: Robin L. M. Cheung, MBA  
-**License**: Apache License 2.0  
-**Status**: Early conceptual/planning stage - no implementation code yet  
+**License**: All rights reserved.   
+**Status**: Partially built: UI TARS: Agent TARS/qwen3-coder-plus 25jul2025
 
 ## Project Purpose
 The application aims to solve the common problem of mismatched brackets in JSON editing by presenting JSON structure as a visual concept map where:

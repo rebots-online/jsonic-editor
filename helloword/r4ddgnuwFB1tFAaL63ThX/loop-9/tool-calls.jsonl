@@ -1,0 +1,16 @@
+[
+  {
+    "toolCallId": "call_c6678df7c2184dd6995cc111",
+    "name": "list_directory",
+    "args": {
+      "path": "/home/robin/CascadeProjects/jsonic/helloword/json-concept-map-editor"
+    },
+    "result": [
+      {
+        "type": "text",
+        "text": ""
+      }
+    ],
+    "executionTime": 12
+  }
+]

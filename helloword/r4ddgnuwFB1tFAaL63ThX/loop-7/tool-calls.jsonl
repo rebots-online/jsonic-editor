@@ -1,0 +1,30 @@
+[
+  {
+    "toolCallId": "call_79d36239614b47edb179c738",
+    "name": "list_directory",
+    "args": {
+      "path": "/home/robin/CascadeProjects/jsonic/helloword"
+    },
+    "result": [
+      {
+        "type": "text",
+        "text": "[DIR] 8hw2F5uXX_wHZy6_JAiXe\n[DIR] X4hemgdVGWs_W6vz-LJSn\n[DIR] json-concept-map-editor\n[DIR] r4ddgnuwFB1tFAaL63ThX"
+      }
+    ],
+    "executionTime": 14
+  },
+  {
+    "toolCallId": "call_8a10980d014d43229843d9bf",
+    "name": "list_directory",
+    "args": {
+      "path": "/home/robin/CascadeProjects/jsonic/helloword/X4hemgdVGWs_W6vz-LJSn"
+    },
+    "result": [
+      {
+        "type": "text",
+        "text": ""
+      }
+    ],
+    "executionTime": 11
+  }
+]
