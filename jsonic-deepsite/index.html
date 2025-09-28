@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual JSON Editor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#1e40af',
+                        dark: '#0f172a',
+                        light: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .json-editor {
+            min-height: 500px;
+            max-height: 70vh;
+            overflow-y: auto;
+            background-color: #1e293b;
+            background-image: radial-gradient(#334155 1px, transparent 1px);
+            background-size: 20px 20px;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .json-item {
+            transition: all 0.2s ease;
+            margin: 5px 0;
+            border-radius: 6px;
+            background-color: #334155;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            position: relative;
+            display: block;
+        }
+        .json-item-content {
+            padding: 8px 12px;
+            margin-left: 0;
+            display: inline-block;
+            min-width: 200px;
+            border-left: 3px solid transparent;
+        }
+        .json-item:hover .json-item-content {
+            background-color: #475569;
+            border-left: 3px solid #60a5fa;
+        }
+        .json-item.selected .json-item-content {
+            background-color: #475569;
+            border-left: 3px solid #60a5fa;
+            box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
+        }
+        .json-item.editing .json-item-content {
+            background-color: #64748b;
+            border-left: 3px solid #fbbf24;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.5);
+        }
+        .json-item:hover {
+            background-color: #475569;
+            border-left: 3px solid #60a5fa;
+        }
+        .json-item.selected {
+            background-color: #475569;
+            border-left: 3px solid #60a5fa;
+            box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
+        }
+        .json-item.editing {
+            background-color: #64748b;
+            border-left: 3px solid #fbbf24;
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.5);
+        }
+        .json-item.dragging {
+            opacity: 0.5;
+            background-color: #475569;
+        }
+        .json-item.drag-over {
+            border-top: 2px dashed #60a5fa;
+        }
+        .json-key {
+            font-weight: 600;
+            color: #93c5fd;
+            margin-right: 8px;
+        }
+        .json-value {
+            color: #6ee7b7;
+        }
+        .json-bracket {
+            color: #94a3b8;
+        }
+        .btn {
+            transition: all 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .indent-line {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background-color: #475569;
+        }
+        .cursor-pointer {
+            cursor: pointer;
+        }
+        .editable:focus {
+            outline: 2px solid #60a5fa;
+            border-radius: 4px;
+        }
+        .editable {
+            min-width: 20px;
+            display: inline-block;
+            background-color: rgba(96, 165, 250, 0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        .toolbar-btn {
+            transition: all 0.2s;
+        }
+        .toolbar-btn:hover {
+            background-color: #475569;
+        }
+        .toolbar-btn.active {
+            background-color: #60a5fa;
+            color: white;
+        }
+        .notification {
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+        .error-highlight {
+            background-color: #fee2e2;
+            border-left: 3px solid #ef4444;
+        }
+        .menu-bar {
+            background-color: #334155;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .menu-item {
+            color: #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 4px;
+        }
+        .menu-item:hover {
+            background-color: #475569;
+        }
+        .menu-item.active {
+            background-color: #60a5fa;
+            color: white;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #334155;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .dropdown-content a {
+            color: #cbd5e1;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #475569;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #334155;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            color: #f1f5f9;
+        }
+        .close {
+            color: #94a3b8;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover {
+            color: #f1f5f9;
+        }
+        .boolean-select {
+            background-color: #475569;
+            color: #f1f5f9;
+            border: 1px solid #64748b;
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 min-h-screen p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-100 mb-2">Visual JSON Editor</h1>
+            <p class="text-slate-300">Edit JSON with drag-and-drop and intuitive keyboard navigation</p>
+        </header>
+
+        <!-- Menu Bar -->
+        <div class="menu-bar flex flex-wrap">
+            <div class="dropdown">
+                <div class="menu-item">File</div>
+                <div class="dropdown-content">
+                    <a href="#" id="newBtn"><i class="fas fa-plus mr-2"></i>New</a>
+                    <a href="#" id="openBtn"><i class="fas fa-folder-open mr-2"></i>Open</a>
+                    <a href="#" id="saveBtn"><i class="fas fa-save mr-2"></i>Save</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <div class="menu-item">Edit</div>
+                <div class="dropdown-content">
+                    <a href="#" id="undoBtn"><i class="fas fa-undo mr-2"></i>Undo</a>
+                    <a href="#" id="redoBtn"><i class="fas fa-redo mr-2"></i>Redo</a>
+                    <a href="#" id="copyBtnMenu"><i class="fas fa-copy mr-2"></i>Copy</a>
+                    <a href="#" id="cutBtnMenu"><i class="fas fa-cut mr-2"></i>Cut</a>
+                    <a href="#" id="pasteBtnMenu"><i class="fas fa-paste mr-2"></i>Paste</a>
+                    <a href="#" id="preferencesBtn"><i class="fas fa-cog mr-2"></i>Preferences</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <div class="menu-item">Tools</div>
+                <div class="dropdown-content">
+                    <a href="#" id="formatBtn"><i class="fas fa-indent mr-2"></i>Format</a>
+                    <a href="#" id="validateBtn"><i class="fas fa-check-circle mr-2"></i>Validate</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <div class="menu-item">View</div>
+                <div class="dropdown-content">
+                    <a href="#" id="viewModeBtn"><i class="fas fa-eye mr-2"></i>View Mode</a>
+                    <a href="#" id="editModeBtn"><i class="fas fa-edit mr-2"></i>Edit Mode</a>
+                </div>
+            </div>
+            <div class="dropdown">
+                <div class="menu-item">Help</div>
+                <div class="dropdown-content">
+                    <a href="#" id="instructionsBtn"><i class="fas fa-info-circle mr-2"></i>Instructions</a>
+                    <a href="#" id="sampleBtn"><i class="fas fa-code mr-2"></i>Sample JSON</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-slate-800 rounded-xl shadow-lg overflow-hidden mb-8">
+            <div class="p-4 bg-slate-700 border-b flex flex-wrap items-center justify-between gap-2">
+                <div class="flex flex-wrap gap-2">
+                    <button id="newBtn2" class="btn bg-primary hover:bg-secondary text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                        <i class="fas fa-plus"></i> New
+                    </button>
+                    <button id="openBtn2" class="btn bg-slate-600 hover:bg-slate-500 px-4 py-2 rounded-lg flex items-center gap-2">
+                        <i class="fas fa-folder-open"></i> Open
+                    </button>
+                    <button id="saveBtn2" class="btn bg-slate-600 hover:bg-slate-500 px-4 py-2 rounded-lg flex items-center gap-2">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                </div>
+                
+                <div class="flex flex-wrap gap-2">
+                    <button id="undoBtn2" class="btn bg-slate-600 hover:bg-slate-500 px-3 py-2 rounded-lg">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <button id="redoBtn2" class="btn bg-slate-600 hover:bg-slate-500 px-3 py-2 rounded-lg">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button id="formatBtn2" class="btn bg-slate-600 hover:bg-slate-500 px-3 py-2 rounded-lg">
+                        <i class="fas fa-indent"></i>
+                    </button>
+                    <button id="validateBtn2" class="btn bg-slate-600 hover:bg-slate-500 px-3 py-2 rounded-lg">
+                        <i class="fas fa-check-circle"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-4 bg-gray-50 border-b flex flex-wrap gap-2">
+                <div class="flex items-center gap-2 bg-white px-3 py-1 rounded-lg shadow-sm">
+                    <span class="text-gray-600">Mode:</span>
+                    <div class="flex gap-1">
+                        <button id="viewModeBtn" class="toolbar-btn px-3 py-1 rounded-md">View</button>
+                        <button id="editModeBtn" class="toolbar-btn px-3 py-1 rounded-md active">Edit</button>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-2 bg-white px-3 py-1 rounded-lg shadow-sm">
+                    <span class="text-gray-600">Indent:</span>
+                    <div class="flex gap-1">
+                        <button id="indentBtn" class="toolbar-btn px-3 py-1 rounded-md">2</button>
+                        <button id="indentBtn4" class="toolbar-btn px-3 py-1 rounded-md">4</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4 flex flex-col md:flex-row gap-4">
+                <div class="w-full">
+                    <div class="bg-slate-700 rounded-lg p-4 mb-4">
+                        <h2 class="text-lg font-semibold text-slate-200 mb-2">JSON Editor</h2>
+                        <div id="jsonEditor" class="json-editor border rounded-lg p-4 font-mono min-h-[400px] relative">
+                            <!-- JSON content will be rendered here -->
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h2 class="text-lg font-semibold text-gray-700 mb-2">JSON Output</h2>
+                        <textarea id="jsonOutput" class="w-full h-40 font-mono text-sm p-3 border rounded-lg bg-white" readonly></textarea>
+                        <div class="mt-2 flex justify-between">
+                            <button id="copyBtn" class="btn bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg">
+                                <i class="fas fa-copy"></i> Copy JSON
+                            </button>
+                            <button id="downloadBtn" class="btn bg-primary hover:bg-secondary text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w-full md:w-1/2">
+                    <div class="bg-gray-50 rounded-lg p-4 h-full">
+                        <h2 class="text-lg font-semibold text-gray-700 mb-2">Preview</h2>
+                        <div class="bg-white border rounded-lg p-4 h-[400px] overflow-y-auto">
+                            <p class="text-gray-600">JSON structure will be displayed here in view mode.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">How It Works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div class="text-blue-500 text-2xl mb-2">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Visual Editing</h3>
+                    <p class="text-gray-700">Easily edit JSON without worrying about brackets or indentation. Each element is visually represented for intuitive editing.</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                    <div class="text-green-500 text-2xl mb-2">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Real-time Sync</h3>
+                    <p class="text-gray-700">Changes in the visual editor are immediately reflected in the JSON output, and vice versa. Validate your JSON at any time.</p>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+                    <div class="text-purple-500 text-2xl mb-2">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Auto-Repair</h3>
+                    <p class="text-gray-700">Paste malformed JSON and our editor will attempt to automatically repair common syntax errors and structural issues.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="notification" class="notification fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 border-l-4 border-green-500 max-w-md">
+            <div class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 text-xl mt-0.5 mr-3"></i>
+                <div>
+                    <h4 class="font-bold text-gray-800">Success!</h4>
+                    <p class="text-gray-600 mt-1">Your JSON has been updated successfully.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample JSON data
+            const sampleJSON = {
+                "name": "John Doe",
+                "age": 30,
+                "isStudent": false,
+                "address": {
+                    "street": "123 Main St",
+                    "city": "Anytown",
+                    "zipcode": "12345"
+                },
+                "hobbies": [
+                    "reading",
+                    "swimming",
+                    "coding"
+                ],
+                "contact": {
+                    "email": "john@example.com",
+                    "phone": "555-1234"
+                }
+            };
+            
+            // DOM elements
+            const jsonEditor = document.getElementById('jsonEditor');
+            const jsonOutput = document.getElementById('jsonOutput');
+            const openBtn = document.getElementById('openBtn');
+            const openBtn2 = document.getElementById('openBtn2');
+            const notification = document.getElementById('notification');
+            const copyBtn = document.getElementById('copyBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            // Current state
+            let jsonData = {};
+            let selectedElement = null;
+            let history = [];
+            let historyIndex = -1;
+            
+            // Initialize with sample data
+            loadJSON(sampleJSON);
+            
+            // Event listeners
+            // Create hidden file input for opening files
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'application/json,.json';
+            fileInput.style.display = 'none';
+            document.body.appendChild(fileInput);
+            
+            // Open file functionality
+            function openFile() {
+                fileInput.click();
+            }
+            
+            fileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            loadJSON(data);
+                            showNotification('File loaded successfully!');
+                        } catch (error) {
+                            showNotification('Error loading file: Invalid JSON');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            });
+            
+            openBtn.addEventListener('click', openFile);
+            openBtn2.addEventListener('click', openFile);
+            
+            copyBtn.addEventListener('click', () => {
+                jsonOutput.select();
+                document.execCommand('copy');
+                showNotification('JSON copied to clipboard!');
+            });
+            
+            downloadBtn.addEventListener('click', () => {
+                const blob = new Blob([jsonOutput.value], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'data.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showNotification('JSON file downloaded!');
+            });
+            
+            // Load JSON data into the editor
+            function loadJSON(data) {
+                jsonData = JSON.parse(JSON.stringify(data)); // Deep copy
+                renderEditor();
+                updateOutput();
+                saveToHistory();
+            }
+            
+            // Render the JSON editor
+            function renderEditor() {
+                jsonEditor.innerHTML = '';
+                renderElement(jsonEditor, jsonData, 0, 'root');
+            }
+            
+            // Render a single JSON element
+            function renderElement(container, data, depth, key = null, parentKey = null) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'json-item relative';
+                wrapper.dataset.key = key;
+                wrapper.dataset.parent = parentKey;
+                wrapper.dataset.depth = depth;
+                
+                // Add indent lines
+                if (depth > 0) {
+                    const indentLine = document.createElement('div');
+                    indentLine.className = 'indent-line';
+                    indentLine.style.left = `${depth * 20}px`;
+                    wrapper.appendChild(indentLine);
+                }
+                
+                // Create element content
+                const content = document.createElement('div');
+                content.className = 'json-item-content flex items-start py-1';
+                content.style.marginLeft = `${depth * 20 + 8}px`;
+                
+                // Key
+                if (key !== null && key !== 'root') {
+                    const keyElement = document.createElement('span');
+                    keyElement.className = 'json-key mr-2';
+                    keyElement.textContent = `"${key}": `;
+                    content.appendChild(keyElement);
+                }
+                
+                // Value or children
+                if (typeof data === 'object' && data !== null) {
+                    if (Array.isArray(data)) {
+                        // Array
+                        const bracket = document.createElement('span');
+                        bracket.className = 'json-bracket';
+                        bracket.textContent = '[';
+                        content.appendChild(bracket);
+                        
+                        wrapper.appendChild(content);
+                        container.appendChild(wrapper);
+                        
+                        // Render array items
+                        data.forEach((item, index) => {
+                            renderElement(container, item, depth + 1, index, key);
+                        });
+                        
+                        // Closing bracket
+                        const closingWrapper = document.createElement('div');
+                        closingWrapper.className = 'json-item relative';
+                        closingWrapper.dataset.key = 'closing';
+                        closingWrapper.dataset.parent = key;
+                        closingWrapper.dataset.depth = depth;
+                        
+                        const closingContent = document.createElement('div');
+                        closingContent.className = 'json-item-content flex items-start py-1';
+                        closingContent.style.marginLeft = `${depth * 20 + 8}px`;
+                        
+                        if (depth > 0) {
+                            const indentLine = document.createElement('div');
+                            indentLine.className = 'indent-line';
+                            indentLine.style.left = `${depth * 20}px`;
+                            closingWrapper.appendChild(indentLine);
+                        }
+                        
+                        const closingContent = document.createElement('div');
+                        closingContent.className = 'flex items-start py-1';
+                        const closingBracket = document.createElement('span');
+                        closingBracket.className = 'json-bracket';
+                        closingBracket.textContent = ']';
+                        closingContent.appendChild(closingBracket);
+                        closingWrapper.appendChild(closingContent);
+                        container.appendChild(closingWrapper);
+                    } else {
+                        // Object
+                        const bracket = document.createElement('span');
+                        bracket.className = 'json-bracket';
+                        bracket.textContent = '{';
+                        content.appendChild(bracket);
+                        
+                        wrapper.appendChild(content);
+                        container.appendChild(wrapper);
+                        
+                        // Render object properties
+                        Object.keys(data).forEach(propKey => {
+                            renderElement(container, data[propKey], depth + 1, propKey, key);
+                        });
+                        
+                        // Closing bracket
+                        const closingWrapper = document.createElement('div');
+                        closingWrapper.className = 'json-item relative';
+                        closingWrapper.dataset.key = 'closing';
+                        closingWrapper.dataset.parent = key;
+                        closingWrapper.dataset.depth = depth;
+                        
+                        const closingContent = document.createElement('div');
+                        closingContent.className = 'json-item-content flex items-start py-1';
+                        closingContent.style.marginLeft = `${depth * 20 + 8}px`;
+                        
+                        if (depth > 0) {
+                            const indentLine = document.createElement('div');
+                            indentLine.className = 'indent-line';
+                            indentLine.style.left = `${depth * 20}px`;
+                            closingWrapper.appendChild(indentLine);
+                        }
+                        
+                        const closingContent = document.createElement('div');
+                        closingContent.className = 'flex items-start py-1';
+                        const closingBracket = document.createElement('span');
+                        closingBracket.className = 'json-bracket';
+                        closingBracket.textContent = '}';
+                        closingContent.appendChild(closingBracket);
+                        closingWrapper.appendChild(closingContent);
+                        container.appendChild(closingWrapper);
+                    }
+                } else {
+                    // Primitive value
+                    const valueElement = document.createElement('span');
+                    valueElement.className = 'json-value';
+                    
+                    if (typeof data === 'string') {
+                        valueElement.textContent = `"${data}"`;
+                    } else if (typeof data === 'boolean') {
+                        valueElement.textContent = data.toString();
+                    } else {
+                        valueElement.textContent = data;
+                    }
+                    
+                    content.appendChild(valueElement);
+                    wrapper.appendChild(content);
+                    container.appendChild(wrapper);
+                }
+                
+                // Add event listeners for editing
+                if (wrapper.dataset.key !== 'closing') {
+                    wrapper.addEventListener('dblclick', () => editElement(wrapper));
+                    wrapper.addEventListener('click', () => selectElement(wrapper));
+                }
+            }
+            
+            // Edit an element
+            function editElement(element) {
+                if (element.dataset.key === 'closing') return;
+                
+                const keyElement = element.querySelector('.json-key');
+                const valueElement = element.querySelector('.json-value');
+                
+                if (keyElement) {
+                    const keyText = keyElement.textContent.replace(/"/g, '').replace(':', '').trim();
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'editable bg-yellow-100 px-1';
+                    input.value = keyText;
+                    keyElement.replaceWith(input);
+                    input.focus();
+                    
+                    input.addEventListener('blur', () => {
+                        const newKey = input.value;
+                        updateKey(element, newKey);
+                        input.replaceWith(keyElement);
+                        keyElement.textContent = `"${newKey}": `;
+                    });
+                    
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            input.blur();
+                        }
+                    });
+                }
+                
+                if (valueElement) {
+                    const valueText = valueElement.textContent.replace(/"/g, '');
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'editable bg-yellow-100 px-1';
+                    input.value = valueText;
+                    valueElement.replaceWith(input);
+                    input.focus();
+                    
+                    input.addEventListener('blur', () => {
+                        const newValue = parseValue(input.value);
+                        updateValue(element, newValue);
+                        input.replaceWith(valueElement);
+                        valueElement.textContent = formatValue(newValue);
+                    });
+                    
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            input.blur();
+                        }
+                    });
+                }
+            }
+            
+            // Parse a value from string to appropriate type
+            function parseValue(value) {
+                if (value === 'true') return true;
+                if (value === 'false') return false;
+                if (value === 'null') return null;
+                if (!isNaN(value) && value.trim() !== '') return Number(value);
+                return value;
+            }
+            
+            // Format a value for display
+            function formatValue(value) {
+                if (typeof value === 'string') return `"${value}"`;
+                if (typeof value === 'boolean') return value.toString();
+                if (value === null) return 'null';
+                return value;
+            }
+            
+            // Update a key
+            function updateKey(element, newKey) {
+                const parentKey = element.dataset.parent;
+                const oldKey = element.dataset.key;
+                
+                if (parentKey === 'root') {
+                    const newData = {};
+                    Object.keys(jsonData).forEach(key => {
+                        if (key === oldKey) {
+                            newData[newKey] = jsonData[key];
+                        } else if (key !== newKey) {
+                            newData[key] = jsonData[key];
+                        }
+                    });
+                    jsonData = newData;
+                } else {
+                    // Find parent in nested structure
+                    const parent = findElementByKey(jsonData, parentKey);
+                    if (parent && typeof parent === 'object') {
+                        const newData = {};
+                        Object.keys(parent).forEach(key => {
+                            if (key === oldKey) {
+                                newData[newKey] = parent[key];
+                            } else if (key !== newKey) {
+                                newData[key] = parent[key];
+                            }
+                        });
+                        Object.keys(parent).forEach(key => delete parent[key]);
+                        Object.assign(parent, newData);
+                    }
+                }
+                
+                element.dataset.key = newKey;
+                updateOutput();
+                saveToHistory();
+            }
+            
+            // Update a value
+            function updateValue(element, newValue) {
+                const key = element.dataset.key;
+                const parentKey = element.dataset.parent;
+                
+                if (parentKey === 'root') {
+                    jsonData[key] = newValue;
+                } else {
+                    const parent = findElementByKey(jsonData, parentKey);
+                    if (parent && typeof parent === 'object') {
+                        parent[key] = newValue;
+                    }
+                }
+                
+                updateOutput();
+                saveToHistory();
+            }
+            
+            // Find an element by key in nested structure
+            function findElementByKey(obj, key) {
+                if (obj[key] !== undefined) return obj;
+                
+                for (let prop in obj) {
+                    if (typeof obj[prop] === 'object' && obj[prop] !== null) {
+                        const result = findElementByKey(obj[prop], key);
+                        if (result) return result;
+                    }
+                }
+                
+                return null;
+            }
+            
+            // Select an element
+            function selectElement(element) {
+                if (selectedElement) {
+                    selectedElement.classList.remove('selected');
+                }
+                
+                element.classList.add('selected');
+                selectedElement = element;
+            }
+            
+            // Update JSON output
+            function updateOutput() {
+                try {
+                    jsonOutput.value = JSON.stringify(jsonData, null, 2);
+                    jsonOutput.classList.remove('error-highlight');
+                } catch (e) {
+                    jsonOutput.value = 'Invalid JSON structure';
+                    jsonOutput.classList.add('error-highlight');
+                }
+            }
+            
+            // Show notification
+            function showNotification(message) {
+                const notificationContent = notification.querySelector('p');
+                notificationContent.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Save to history for undo/redo
+            function saveToHistory() {
+                // Remove future history if we're not at the end
+                if (historyIndex < history.length - 1) {
+                    history = history.slice(0, historyIndex + 1);
+                }
+                
+                history.push(JSON.parse(JSON.stringify(jsonData)));
+                historyIndex = history.length - 1;
+            }
+            
+            // Undo action
+            function undo() {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    jsonData = JSON.parse(JSON.stringify(history[historyIndex]));
+                    renderEditor();
+                    updateOutput();
+                    showNotification('Undo successful');
+                }
+            }
+            
+            // Redo action
+            function redo() {
+                if (historyIndex < history.length - 1) {
+                    historyIndex++;
+                    jsonData = JSON.parse(JSON.stringify(history[historyIndex]));
+                    renderEditor();
+                    updateOutput();
+                    showNotification('Redo successful');
+                }
+            }
+            
+            // Event listeners for undo/redo
+            document.getElementById('undoBtn').addEventListener('click', undo);
+            document.getElementById('redoBtn').addEventListener('click', redo);
+            
+            // Event listeners for copy, cut, paste
+            document.getElementById('copyBtnMenu').addEventListener('click', () => {
+                if (selectedElement) {
+                    const range = document.createRange();
+                    range.selectNode(selectedElement);
+                    window.getSelection().removeAllRanges();
+                    window.getSelection().addRange(range);
+                    document.execCommand('copy');
+                    window.getSelection().removeAllRanges();
+                    showNotification('Copied to clipboard');
+                }
+            });
+            
+            document.getElementById('cutBtnMenu').addEventListener('click', () => {
+                if (selectedElement) {
+                    const range = document.createRange();
+                    range.selectNode(selectedElement);
+                    window.getSelection().removeAllRanges();
+                    window.getSelection().addRange(range);
+                    document.execCommand('cut');
+                    window.getSelection().removeAllRanges();
+                    showNotification('Cut to clipboard');
+                }
+            });
+            
+            document.getElementById('pasteBtnMenu').addEventListener('click', () => {
+                navigator.clipboard.readText().then(text => {
+                    // Try to parse as JSON and load if valid
+                    try {
+                        const data = JSON.parse(text);
+                        loadJSON(data);
+                        showNotification('JSON pasted successfully');
+                    } catch (e) {
+                        // If not valid JSON, just show notification
+                        showNotification('Clipboard content is not valid JSON');
+                    }
+                }).catch(err => {
+                    showNotification('Failed to read clipboard contents');
+                });
+            });
+            
+            // Enable pasting in JSON output pane
+            jsonOutput.addEventListener('paste', (e) => {
+                e.preventDefault();
+                navigator.clipboard.readText().then(text => {
+                    try {
+                        const data = JSON.parse(text);
+                        loadJSON(data);
+                        showNotification('JSON pasted successfully');
+                    } catch (parseError) {
+                        // If not valid JSON, paste as plain text
+                        const start = jsonOutput.selectionStart;
+                        const end = jsonOutput.selectionEnd;
+                        const currentValue = jsonOutput.value;
+                        jsonOutput.value = currentValue.substring(0, start) + text + currentValue.substring(end);
+                        showNotification('Pasted as plain text');
+                    }
+                }).catch(err => {
+                    // Fallback to clipboardData for older browsers
+                    const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                    try {
+                        const data = JSON.parse(text);
+                        loadJSON(data);
+                        showNotification('JSON pasted successfully');
+                    } catch (parseError) {
+                        const start = jsonOutput.selectionStart;
+                        const end = jsonOutput.selectionEnd;
+                        const currentValue = jsonOutput.value;
+                        jsonOutput.value = currentValue.substring(0, start) + text + currentValue.substring(end);
+                        showNotification('Pasted as plain text');
+                    }
+                });
+            });
+            
+            // Enable pasting in JSON editor pane
+            jsonEditor.addEventListener('paste', (e) => {
+                e.preventDefault();
+                navigator.clipboard.readText().then(text => {
+                    try {
+                        const data = JSON.parse(text);
+                        loadJSON(data);
+                        showNotification('JSON pasted successfully');
+                    } catch (parseError) {
+                        showNotification('Clipboard content is not valid JSON');
+                    }
+                }).catch(err => {
+                    // Fallback to clipboardData for older browsers
+                    const text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                    try {
+                        const data = JSON.parse(text);
+                        loadJSON(data);
+                        showNotification('JSON pasted successfully');
+                    } catch (parseError) {
+                        showNotification('Clipboard content is not valid JSON');
+                    }
+                });
+            });
+            
+            // Format JSON
+            document.getElementById('formatBtn').addEventListener('click', () => {
+                updateOutput();
+                showNotification('JSON formatted');
+            });
+            
+            // Validate JSON
+            document.getElementById('validateBtn').addEventListener('click', () => {
+                try {
+                    JSON.parse(jsonOutput.value);
+                    showNotification('JSON is valid!');
+                } catch (e) {
+                    showNotification('Invalid JSON: ' + e.message);
+                }
+            });
+        });
+    </script>
+<p style="border-radius: 8px; text-align: center; font-size: 12px; color: #fff; margin-top: 16px;position: fixed; left: 8px; bottom: 8px; z-index: 10; background: rgba(0, 0, 0, 0.8); padding: 4px 8px;">Made with <img src="https://enzostvs-deepsite.hf.space/logo.svg" alt="DeepSite Logo" style="width: 16px; height: 16px; vertical-align: middle;display:inline-block;margin-right:3px;filter:brightness(0) invert(1);"><a href="https://enzostvs-deepsite.hf.space" style="color: #fff;text-decoration: underline;" target="_blank" >DeepSite</a> - 🧬 <a href="https://enzostvs-deepsite.hf.space?remix=RobinsAIWorld/jsonic-v2" style="color: #fff;text-decoration: underline;" target="_blank" >Remix</a></p></body>
+</html>
