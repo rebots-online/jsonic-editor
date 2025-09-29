@@ -1,0 +1,82 @@
+import { NodeType } from '../types/core';
+export const testData = {
+    id: 'root',
+    type: NodeType.OBJECT,
+    key: 'root',
+    position: { x: 0, y: 0 },
+    expanded: true,
+    children: [
+        {
+            id: 'name',
+            type: NodeType.STRING,
+            key: 'name',
+            value: 'John Doe',
+            position: { x: 0, y: 0 },
+            expanded: false,
+        },
+        {
+            id: 'age',
+            type: NodeType.NUMBER,
+            key: 'age',
+            value: 30,
+            position: { x: 0, y: 0 },
+            expanded: false,
+        },
+        {
+            id: 'active',
+            type: NodeType.BOOLEAN,
+            key: 'active',
+            value: true,
+            position: { x: 0, y: 0 },
+            expanded: false,
+        },
+        {
+            id: 'address',
+            type: NodeType.OBJECT,
+            key: 'address',
+            position: { x: 0, y: 0 },
+            expanded: true,
+            children: [
+                {
+                    id: 'street',
+                    type: NodeType.STRING,
+                    key: 'street',
+                    value: '123 Main St',
+                    position: { x: 0, y: 0 },
+                    expanded: false,
+                },
+                {
+                    id: 'city',
+                    type: NodeType.STRING,
+                    key: 'city',
+                    value: 'New York',
+                    position: { x: 0, y: 0 },
+                    expanded: false,
+                },
+            ],
+        },
+        {
+            id: 'hobbies',
+            type: NodeType.ARRAY,
+            key: 'hobbies',
+            position: { x: 0, y: 0 },
+            expanded: true,
+            children: [
+                {
+                    id: 'hobby1',
+                    type: NodeType.STRING,
+                    value: 'Reading',
+                    position: { x: 0, y: 0 },
+                    expanded: false,
+                },
+                {
+                    id: 'hobby2',
+                    type: NodeType.STRING,
+                    value: 'Hiking',
+                    position: { x: 0, y: 0 },
+                    expanded: false,
+                },
+            ],
+        },
+    ],
+};

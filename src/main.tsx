@@ -1,8 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App-minimal';
+import App from './App';
 import { ErrorBoundary } from './components/error-boundary/ErrorBoundary';
 import { ErrorDisplay } from './components/error-boundary/ErrorDisplay';
+import { ThemeProvider } from 'styled-components';
+import { useUIStore } from './stores';
+import { themes } from './themes';
 
 // Global error handler
 window.addEventListener('error', (event) => {
@@ -12,6 +15,17 @@ window.addEventListener('error', (event) => {
 window.addEventListener('unhandledrejection', (event) => {
   console.error('Unhandled promise rejection:', event.reason);
 });
+
+const Root = () => {
+  const { preferences } = useUIStore();
+  const currentTheme = themes[preferences.themeId] || themes['default-light'];
+
+  return (
+    <ThemeProvider theme={currentTheme}>
+      <App />
+    </ThemeProvider>
+  );
+};
 
 console.log('🚀 JSONIC Editor starting up...');
 console.log('📁 React version:', React.version);
@@ -49,7 +63,7 @@ ReactDOM.createRoot(rootElement as HTMLElement).render(
         </div>
       }
     >
-      <App />
+      <Root />
     </ErrorBoundary>
   </React.StrictMode>
 );
