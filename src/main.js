@@ -1,8 +1,11 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App-minimal';
+import App from './App';
 import { ErrorBoundary } from './components/error-boundary/ErrorBoundary';
+import { ThemeProvider } from 'styled-components';
+import { useUIStore } from './stores';
+import { themes } from './themes';
 // Global error handler
 window.addEventListener('error', (event) => {
     console.error('Global error caught:', event.error);
@@ -10,6 +13,11 @@ window.addEventListener('error', (event) => {
 window.addEventListener('unhandledrejection', (event) => {
     console.error('Unhandled promise rejection:', event.reason);
 });
+const Root = () => {
+    const { preferences } = useUIStore();
+    const currentTheme = themes[preferences.themeId] || themes['default-light'];
+    return (_jsx(ThemeProvider, { theme: currentTheme, children: _jsx(App, {}) }));
+};
 console.log('🚀 JSONIC Editor starting up...');
 console.log('📁 React version:', React.version);
 const rootElement = document.getElementById('root');
@@ -28,4 +36,4 @@ ReactDOM.createRoot(rootElement).render(_jsx(React.StrictMode, { children: _jsx(
                         border: 'none',
                         borderRadius: '4px',
                         cursor: 'pointer'
-                    }, children: "Reload Page" })] }), children: _jsx(App, {}) }) }));
+                    }, children: "Reload Page" })] }), children: _jsx(Root, {}) }) }));
