@@ -1,0 +1,23 @@
+# Checklist — JSONC Commands & Dialogs (2025-12-31 00:24 UTC)
+
+- [x] Add `jsonc-parser` dependency with `serde` + `cst` features; add `tempfile` dev-dependency for tests.
+- [x] Update `json_comments.rs`:
+  - [x] Define `CommentedDocument` struct storing `path: Option<PathBuf>`, `root: CstRootNode`, `value: serde_json::Value`, newline metadata.
+  - [x] Add global `COMMENT_CACHE: Lazy<Mutex<HashMap<PathBuf, CommentedDocument>>>`.
+  - [x] Implement helper `serde_value_to_cst(value: &Value) -> CstInputValue` for conversions.
+  - [x] Implement `parse_json_with_comments(text: &str, path_hint: Option<&Path>) -> Result<CommentedDocument, String>` using `jsonc_parser::parse_to_serde_value` (with comments) and `CstRootNode::parse` to preserve layout; cache by path if available.
+  - [x] Implement `stringify_json_with_comments(value: &Value, path_hint: Option<&Path>) -> Result<String, String>` that:
+    - [x] Uses cached `CommentedDocument` when path matches to maintain comments/format.
+    - [x] Falls back to parsing fresh CST from value when cache absent while noting comment loss in message/log.
+    - [x] Produces friendly parse/write errors with context.
+- [x] Refactor `commands.rs`:
+  - [x] Rename exported commands to avoid helper recursion (`cmd_open_file`, `cmd_save_file`, `cmd_parse_json_with_comments`, `cmd_stringify_json_with_comments`).
+  - [x] Integrate `tauri::api::dialog::FileDialogBuilder` to prompt for path when argument empty; return cancel-friendly errors.
+  - [x] Route JSON parsing/stringifying through `json_comments` helpers (new signatures) and improved error handling.
+  - [x] Ensure cache uses absolute paths for open/save.
+- [/] Enhance `file_handler.rs` error handling with contextual mapping (permission, not found) returning `std::io::Error` still but consumed in commands.
+- [x] Add unit tests (in `src-tauri/src/commands.rs` or new module):
+  - [x] Test `cmd_parse_json_with_comments` round-trips inline/block comments.
+  - [x] Test `cmd_open_file` + `cmd_save_file` preserve comments using temp files.
+  - [x] Test friendly errors on missing file and write permission issues (simulate with readonly dir or invalid path).
+- [ ] Run `cargo test` in `jsonic/src-tauri` and ensure passing.
