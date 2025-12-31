@@ -1,31 +1,94 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
+import { invoke } from '@tauri-apps/api/tauri';
 import Toolbar from './components/Toolbar';
 import GraphView from './components/GraphView';
 import TextEditor from './components/TextEditor';
 import StatusBar from './components/StatusBar';
 import { JsonGraph } from './types/jsonTypes';
+import { graphToJson, jsonToGraph } from './utils/jsonParser';
+
+type StatusLevel = 'info' | 'error';
+interface StatusMessage {
+  level: StatusLevel;
+  message: string;
+}
+
+const createEmptyGraph = (): JsonGraph => ({
+  nodes: [],
+  edges: [],
+  metadata: { comments: {} }
+});
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<'graph' | 'text' | 'split'>('graph');
-  const [graph, setGraph] = useState<JsonGraph>({
-    nodes: [],
-    edges: [],
-    metadata: { comments: {} }
-  });
+  const [graph, setGraph] = useState<JsonGraph>(createEmptyGraph);
   const [textContent, setTextContent] = useState<string>('');
   const [currentFile, setCurrentFile] = useState<string | null>(null);
+  const [status, setStatus] = useState<StatusMessage | null>(null);
 
-  const handleOpenFile = () => {
-    // Implementation for opening file
-  };
+  const syncGraphAndText = useCallback((jsonValue: any) => {
+    setGraph(jsonToGraph(jsonValue));
+    setTextContent(JSON.stringify(jsonValue, null, 2));
+  }, []);
 
-  const handleSaveFile = () => {
-    // Implementation for saving file
-  };
+  const handleOpenFile = useCallback(async () => {
+    try {
+      const result = await invoke<any>('cmd_open_file');
+      syncGraphAndText(result);
 
-  const handleNewFile = () => {
-    // Implementation for creating new file
-  };
+      const returnedPath =
+        (result as any)?.metadata?.filePath ??
+        (result as any)?.filePath ??
+        currentFile;
+
+      if (typeof returnedPath === 'string') {
+        setCurrentFile(returnedPath);
+      }
+
+      setStatus({ level: 'info', message: 'File opened successfully.' });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setStatus({ level: 'error', message: `Open failed: ${message}` });
+    }
+  }, [currentFile, syncGraphAndText]);
+
+  const handleSaveFile = useCallback(async () => {
+    let contentValue: any;
+
+    if (textContent.trim().length > 0) {
+      try {
+        contentValue = JSON.parse(textContent);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        setStatus({ level: 'error', message: `Save aborted: invalid JSON - ${message}` });
+        return;
+      }
+    } else {
+      contentValue = graphToJson(graph);
+    }
+
+    try {
+      await invoke('cmd_save_file', {
+        path: currentFile ?? undefined,
+        content: contentValue
+      });
+      setStatus({
+        level: 'info',
+        message: `Saved ${currentFile ?? 'file'}.`
+      });
+      syncGraphAndText(contentValue);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setStatus({ level: 'error', message: `Save failed: ${message}` });
+    }
+  }, [currentFile, graph, syncGraphAndText, textContent]);
+
+  const handleNewFile = useCallback(() => {
+    setGraph(createEmptyGraph());
+    setTextContent('');
+    setCurrentFile(null);
+    setStatus({ level: 'info', message: 'New file started.' });
+  }, []);
 
   return (
     <div className="app">
@@ -86,6 +149,7 @@ const App: React.FC = () => {
         currentFile={currentFile}
         nodeCount={graph.nodes.length}
         edgeCount={graph.edges.length}
+        status={status}
       />
     </div>
   );

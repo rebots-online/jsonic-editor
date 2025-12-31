@@ -143,12 +143,15 @@ export const addChildNode = (graph: JsonGraph, parentId: string, node: Omit<Json
   };
 
   const newNodes = [...graph.nodes, newNode];
-  const newEdges = [...graph.edges, {
-    id: uuidv4(),
-    source: parentId,
-    target: newNodeId,
-    type: 'parent'
-  }];
+  const newEdges: JsonGraph['edges'] = [
+    ...graph.edges,
+    {
+      id: uuidv4(),
+      source: parentId,
+      target: newNodeId,
+      type: 'parent'
+    }
+  ];
 
   return {
     ...graph,
