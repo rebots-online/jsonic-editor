@@ -252,10 +252,24 @@ export const moveNode = (
   newParentId: string,
   position?: { x: number; y: number }
 ): JsonGraph => {
-  const node = findNode(graph, nodeId);
-  const newParent = findNode(graph, newParentId);
+  const nodeMap = new Map<string, JsonNode>(graph.nodes.map(node => [node.id, node]));
+  const node = nodeMap.get(nodeId);
+  const newParent = nodeMap.get(newParentId);
 
   if (!node || !newParent) {
+    return graph;
+  }
+
+  const isDescendant = (currentId: string, searchId: string): boolean => {
+    const currentNode = nodeMap.get(currentId);
+    if (!currentNode?.children || currentNode.children.length === 0) {
+      return false;
+    }
+
+    return currentNode.children.some(childId => childId === searchId || isDescendant(childId, searchId));
+  };
+
+  if (nodeId === newParentId || isDescendant(nodeId, newParentId)) {
     return graph;
   }
 
