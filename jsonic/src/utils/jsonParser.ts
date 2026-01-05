@@ -142,7 +142,19 @@ export const addChildNode = (graph: JsonGraph, parentId: string, node: Omit<Json
     parent: parentId
   };
 
-  const newNodes = [...graph.nodes, newNode];
+  const newNodes = graph.nodes.map(existingNode => {
+    if (existingNode.id !== parentId) {
+      return existingNode;
+    }
+
+    const updatedChildren = existingNode.children ? [...existingNode.children, newNodeId] : [newNodeId];
+
+    return {
+      ...existingNode,
+      children: updatedChildren
+    };
+  });
+
   const newEdges: JsonGraph['edges'] = [
     ...graph.edges,
     {
@@ -155,7 +167,7 @@ export const addChildNode = (graph: JsonGraph, parentId: string, node: Omit<Json
 
   return {
     ...graph,
-    nodes: newNodes,
+    nodes: [...newNodes, newNode],
     edges: newEdges
   };
 };
@@ -169,5 +181,130 @@ export const updateNode = (graph: JsonGraph, nodeId: string, updates: Partial<Js
   return {
     ...graph,
     nodes: newNodes
+  };
+};
+
+// Add an edge between two nodes
+export const addEdge = (
+  graph: JsonGraph,
+  sourceId: string,
+  targetId: string,
+  type: JsonGraph['edges'][number]['type'] = 'parent'
+): JsonGraph => {
+  const newEdges: JsonGraph['edges'] = [
+    ...graph.edges,
+    {
+      id: uuidv4(),
+      source: sourceId,
+      target: targetId,
+      type
+    }
+  ];
+
+  return {
+    ...graph,
+    edges: newEdges
+  };
+};
+
+// Remove a node and its descendants
+export const removeNode = (graph: JsonGraph, nodeId: string): JsonGraph => {
+  const nodeMap = new Map<string, JsonNode>(graph.nodes.map(node => [node.id, node]));
+  const toRemove = new Set<string>();
+
+  const collectDescendants = (id: string) => {
+    if (toRemove.has(id)) return;
+    toRemove.add(id);
+    const current = nodeMap.get(id);
+    current?.children?.forEach(childId => collectDescendants(childId));
+  };
+
+  collectDescendants(nodeId);
+
+  const filteredNodes = graph.nodes.filter(node => !toRemove.has(node.id));
+  const filteredEdges = graph.edges.filter(edge => !toRemove.has(edge.source) && !toRemove.has(edge.target));
+
+  const prunedNodes = filteredNodes.map(node => {
+    if (!node.children) {
+      return node;
+    }
+
+    const remainingChildren = node.children.filter(childId => !toRemove.has(childId));
+
+    if (remainingChildren.length !== node.children.length) {
+      return { ...node, children: remainingChildren };
+    }
+
+    return node;
+  });
+
+  return {
+    ...graph,
+    nodes: prunedNodes,
+    edges: filteredEdges
+  };
+};
+
+// Move a node to a new parent (optionally updating its position)
+export const moveNode = (
+  graph: JsonGraph,
+  nodeId: string,
+  newParentId: string,
+  position?: { x: number; y: number }
+): JsonGraph => {
+  const node = findNode(graph, nodeId);
+  const newParent = findNode(graph, newParentId);
+
+  if (!node || !newParent) {
+    return graph;
+  }
+
+  const updatedNodes = graph.nodes.map(existingNode => {
+    if (existingNode.id === nodeId) {
+      return {
+        ...existingNode,
+        parent: newParentId,
+        position: position ?? existingNode.position
+      };
+    }
+
+    if (existingNode.id === node.parent) {
+      const remainingChildren = existingNode.children?.filter(childId => childId !== nodeId) ?? [];
+      return {
+        ...existingNode,
+        children: remainingChildren
+      };
+    }
+
+    if (existingNode.id === newParentId) {
+      const existingChildren = existingNode.children ?? [];
+      const mergedChildren = existingChildren.includes(nodeId)
+        ? existingChildren
+        : [...existingChildren, nodeId];
+
+      return {
+        ...existingNode,
+        children: mergedChildren
+      };
+    }
+
+    return existingNode;
+  });
+
+  const filteredEdges = graph.edges.filter(edge => edge.target !== nodeId);
+  const updatedEdges: JsonGraph['edges'] = [
+    ...filteredEdges,
+    {
+      id: uuidv4(),
+      source: newParentId,
+      target: nodeId,
+      type: 'parent'
+    }
+  ];
+
+  return {
+    ...graph,
+    nodes: updatedNodes,
+    edges: updatedEdges
   };
 };
