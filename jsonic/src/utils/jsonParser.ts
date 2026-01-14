@@ -259,6 +259,27 @@ export const moveNode = (
     return graph;
   }
 
+  const nodeMap = new Map<string, JsonNode>(graph.nodes.map(existingNode => [existingNode.id, existingNode]));
+
+  const isDescendant = (ancestorId: string, maybeDescendantId: string): boolean => {
+    const ancestorNode = nodeMap.get(ancestorId);
+    if (!ancestorNode?.children) {
+      return false;
+    }
+
+    for (const childId of ancestorNode.children) {
+      if (childId === maybeDescendantId || isDescendant(childId, maybeDescendantId)) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  if (nodeId === newParentId || isDescendant(nodeId, newParentId)) {
+    return graph;
+  }
+
   const updatedNodes = graph.nodes.map(existingNode => {
     if (existingNode.id === nodeId) {
       return {
