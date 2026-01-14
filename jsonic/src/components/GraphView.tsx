@@ -74,7 +74,8 @@ const GraphView: React.FC<GraphViewProps> = ({
       data: { 
         id: edge.id,
         source: edge.source, 
-        target: edge.target 
+        target: edge.target,
+        type: edge.type
       }
     }));
 
