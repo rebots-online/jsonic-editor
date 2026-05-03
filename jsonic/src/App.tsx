@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { invoke } from '@tauri-apps/api/tauri';
 import Toolbar from './components/Toolbar';
 import GraphView from './components/GraphView';
@@ -99,6 +99,17 @@ const App: React.FC = () => {
     setStatus({ level: 'info', message: 'New file started.' });
   }, []);
 
+  const handleApplyTextToGraph = useCallback(() => {
+    try {
+      const parsed = textContent.trim().length ? JSON.parse(textContent) : {};
+      syncGraphAndText(parsed);
+      setStatus({ level: 'info', message: 'Text parsed and graph updated.' });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      setStatus({ level: 'error', message: `Text parse failed: ${message}` });
+    }
+  }, [syncGraphAndText, textContent]);
+
   const updateGraphState = useCallback((updater: (current: JsonGraph) => JsonGraph) => {
     setGraph(current => {
       const nextGraph = updater(current);
@@ -195,6 +206,22 @@ const App: React.FC = () => {
     }));
   }, []);
 
+  useEffect(() => {
+    const onGlobalShortcut = (event: KeyboardEvent) => {
+      if (!(event.ctrlKey || event.metaKey)) return;
+      if (event.key.toLowerCase() === 's') {
+        event.preventDefault();
+        handleSaveFile();
+      }
+      if (event.key.toLowerCase() === 'o') {
+        event.preventDefault();
+        handleOpenFile();
+      }
+    };
+    window.addEventListener('keydown', onGlobalShortcut);
+    return () => window.removeEventListener('keydown', onGlobalShortcut);
+  }, [handleOpenFile, handleSaveFile]);
+
   return (
     <div className="app">
       <Toolbar 
@@ -203,6 +230,7 @@ const App: React.FC = () => {
         onNew={handleNewFile}
         onViewChange={setCurrentView}
         currentView={currentView}
+        onApplyText={handleApplyTextToGraph}
       />
       
       <div className="main-content">

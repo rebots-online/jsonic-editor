@@ -194,26 +194,25 @@ const GraphView: React.FC<GraphViewProps> = ({
     const selectedCollection = cy.$(':selected').nodes();
     const selected: cytoscape.NodeSingular = selectedCollection.nonempty() ? selectedCollection[0] : nodes[0];
 
-    if (event.key === 'Tab') {
+    if (event.key === 'Tab' && !event.shiftKey) {
       event.preventDefault();
-      const currentIndex = nodes.toArray().findIndex(node => node.id() === selected.id());
-      const nextIndex = event.shiftKey
-        ? (currentIndex - 1 + nodes.length) % nodes.length
-        : (currentIndex + 1) % nodes.length;
-      focusNode(nodes[nextIndex]);
+      onNodeCreate({ parentId: selected.id(), position: selected.position() });
+      return;
+    }
+
+    if (event.key === 'Tab' && event.shiftKey) {
+      event.preventDefault();
+      const { parentNode } = getTraversalTargets(selected);
+      focusNode(parentNode);
       return;
     }
 
     if (event.key === 'Enter') {
       event.preventDefault();
       const data = selected.data();
-      onNodeEdit({
-        id: selected.id(),
-        key: data.key,
-        type: data.type,
-        value: data.value,
-        position: selected.position(),
-        parentId: data.parentId as string | undefined
+      onNodeCreate({
+        parentId: (data.parentId as string | undefined) ?? selected.id(),
+        position: selected.position()
       });
       return;
     }
@@ -231,7 +230,7 @@ const GraphView: React.FC<GraphViewProps> = ({
         focusNode(nextSibling);
       }
     }
-  }, [onNodeEdit, onNodeSelect]);
+  }, [onNodeCreate, onNodeSelect]);
 
   // Initialize Cytoscape
   useEffect(() => {

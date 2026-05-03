@@ -16,6 +16,8 @@ const StatusBar: React.FC<StatusBarProps> = ({
   edgeCount,
   status
 }) => {
+  const version = 'v0.1.0';
+  const build = String(Math.floor(Date.now() / 60000) % 100000).padStart(5, '0');
   return (
     <div className="status-bar">
       <div className="status-left">
@@ -30,7 +32,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
         )}
       </div>
       <div className="status-right">
-        Nodes: {nodeCount} | Edges: {edgeCount}
+        Nodes: {nodeCount} | Edges: {edgeCount} | {version}+{build}
       </div>
     </div>
   );
