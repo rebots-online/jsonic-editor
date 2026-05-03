@@ -4,6 +4,7 @@ interface ToolbarProps {
   onOpen: () => void;
   onSave: () => void;
   onNew: () => void;
+  onApplyText: () => void;
   onViewChange: (view: 'graph' | 'text' | 'split') => void;
   currentView: 'graph' | 'text' | 'split';
 }
@@ -12,6 +13,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onOpen, 
   onSave, 
   onNew,
+  onApplyText,
   onViewChange,
   currentView
 }) => {
@@ -26,6 +28,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
         </button>
         <button className="toolbar-button" onClick={onSave}>
           Save
+        </button>
+        <button className="toolbar-button" onClick={onApplyText}>
+          Apply Text
         </button>
       </div>
       
